@@ -46,6 +46,21 @@ public class Sudoku{
     return tiles[getSize()*(box/getSize())*getSize()*getSize()+getSize()*(box%getSize())+getSize()*getSize()*(pos/getSize())+(pos%getSize())];
   }
   
+  public void setTile(int tileNumber,byte tileValue){
+    if(tileValue<-1||tileValue>=(getSize()*getSize())){throw new IllegalArgumentException("Tile "+tileValue+" has an invalid value");}
+    tiles[tileNumber]=tileValue;
+  }
+  
+  public void setTile(int row,int column,byte tileValue){
+    if(tileValue<-1||tileValue>=(getSize()*getSize())){throw new IllegalArgumentException("Tile "+tileValue+" has an invalid value");}
+    tiles[getSize()*getSize()*row+column]=tileValue;
+  }
+  
+  public void setTileInBox(int box,int pos,byte tileValue){
+   if(tileValue<-1||tileValue>=(getSize()*getSize())){throw new IllegalArgumentException("Tile "+tileValue+" has an invalid value");}
+   tiles[getSize()*(box/getSize())*getSize()*getSize()+getSize()*(box%getSize())+getSize()*getSize()*(pos/getSize())+(pos%getSize())]=tileValue;
+  }
+  
   public byte[] getRow(int row){
     byte[] rowTiles=new byte[getSize()*getSize()];
     int offset=getSize()*getSize()*row;
