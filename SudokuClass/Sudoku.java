@@ -19,14 +19,14 @@ public class Sudoku{
   }
   
     private static boolean allEmementsUnique(byte[] b){
-      if(b.length>256){return false;}
-      for(int i = 0; i < b.length-1;i++){
+     if(b.length>256){return false;}
+      for(int i=0;i<b.length-1;i++){
         for(int j=i+1;j<b.length;j++){
           if(b[i]==b[j]){return false;}
-          }
-         }              
+         }
+        }              
     return true;   
-    }
+  }
   
   public Sudoku(byte[] tileset){
     int size=(int)Math.pow(tileset.length,1d/4d);
