@@ -33,15 +33,6 @@ public class Sudoku{
     }
     return b;
   }
-    
-    private static int[] removeElement(int[] arr,int element){
-      int[] b=new int[arr.length-1];
-      int subcount=0;
-      for(int c=0;c<arr.length;c++){
-        if(c!=element){b[subcount]=arr[c];subcount++;}
-      }
-      return b;
-    }
   
     private static boolean allEmementsUnique(byte[] b){
      if(b.length>256){return false;}
@@ -52,15 +43,6 @@ public class Sudoku{
         }              
     return true;   
   }
-    
-   private static int[] removeDuplicates(int[] a){
-      Arrays.sort(a);
-      int[] b=new int[] {a[0]};
-      for(int c=1;c<a.length;c++){
-        if(a[c]!=a[c-1]){b=Arrays.copyOf(b,b.length+1);b[b.length-1]=a[c];}
-      }
-      return b;
-   }
   
     private static boolean arrayContains(int[] array,int val){
       for(int c=0;c<array.length;c++){
@@ -68,57 +50,21 @@ public class Sudoku{
       }
       return false;
     }
-    
-    private static int[] naturalNumbersUntil(int num){
-      int[] nums=new int[num];
-      for(int c=1;c<num;c++){
-        nums[c]=nums[c-1];
-        nums[c]++;
-      }
-      return nums;
+  
+  public Sudoku(byte[] tileset){
+    int size=(int)Math.pow(tileset.length,1d/4d);
+    if((int)Math.pow(size,4)!=tileset.length||size<MIN_SIZE||size>MAX_SIZE){throw new IllegalArgumentException(tileset.length+" is an invalid number of tiles");}
+    for(int c=0;c<tileset.length;c++){
+      if(tileset[c]<-1||tileset[c]>=(size*size)){throw new IllegalArgumentException("Tile "+c+" has an invalid value");}
     }
-    
-    public Sudoku(byte[] tileset){
-      int size=(int)Math.pow(tileset.length,1d/4d);
-      if((int)Math.pow(size,4)!=tileset.length||size<MIN_SIZE||size>MAX_SIZE){throw new IllegalArgumentException(tileset.length+" is an invalid number of tiles");}
-      for(int c=0;c<tileset.length;c++){
-        if(tileset[c]<-1||tileset[c]>=(size*size)){throw new IllegalArgumentException("Tile "+c+" has an invalid value");}
-         }
-      tiles=new byte[tileset.length];
-      for(int c=0;c<tileset.length;c++){
-        tiles[c]=tileset[c];
-      }
+    tiles=new byte[tileset.length];
+    for(int c=0;c<tileset.length;c++){
+      tiles[c]=tileset[c];
     }
-    
-    public Sudoku(int size){
-      if(size<MIN_SIZE||size>MAX_SIZE){throw new IllegalArgumentException(size+" is an invalid sudoku size");}
-      tiles=new byte[(int)Math.pow(size,4)];
-      for(int c=0;c<tiles.length;c++){
-        tiles[c]=-1;
-      }
-    }
-    
-    public Sudoku(int size,int missingTiles,Random random){
-      this(size,missingTiles,random,random);
-    }
-    
-    //TODO: Random Sudoku Generator
-    public Sudoku(int size,int missingTiles,Random random1,Random random2){
-      this(size);
-    }
-
-  public Sudoku(byte[] tileset,int missingTiles,Random random){
-    Sudoku s=new Sudoku(tileset);
-    if(s.tiles.length<=missingTiles){s=new Sudoku(s.getSize());}
-    else{
-    int[] potentialMissingTiles=naturalNumbersUntil(tileset.length);
-    for(int c=0;c<missingTiles;c++){
-         int rnd=random.nextInt(potentialMissingTiles.length);
-         s.tiles[potentialMissingTiles[rnd]]=-1;
-         potentialMissingTiles=removeElement(potentialMissingTiles,rnd);
-        }
-       }
-     tiles=s.tiles;
+  }
+  
+  public Sudoku(String stringForm){
+    this(stringArrayToByteArray(stringForm.split("\\|")));
   }
   
   public String toString(){
@@ -128,10 +74,6 @@ public class Sudoku{
       if(c!=tiles.length-1){str=str+"|";}
     }
     return str;
-  }
-  
-  public static Sudoku constructFromString(String stringForm){
-    return new Sudoku(stringArrayToByteArray(stringForm.split("\\|")));
   }
   
   public String toTechnicalString(){
