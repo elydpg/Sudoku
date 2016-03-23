@@ -113,8 +113,8 @@ public class Sudoku{
     return (int)Math.pow(tiles.length,1d/4d);
   }
   
-  public byte getTile(int tileNumber){
-    return tiles[tileNumber];
+  public byte getTile(int tilePosition){
+    return tiles[tilePosition];
   }
   
   public byte getTile(int row,int column){
@@ -248,17 +248,18 @@ public class Sudoku{
   }
   
   public int[] conflictingTilePositions(int tilePosition){
+    if(tiles[tilePosition]==-1){return new int[0];}
     int[] conflicts=new int[0];
     for(int c=0;c<getSize()*getSize();c++){
-      if(getTile(rowOf(tilePosition),c)==getTile(tilePosition)&&getTilePosition(rowOf(tilePosition),c)!=tilePosition){
+      if(getTile(rowOf(tilePosition),c)==tiles[tilePosition]&&getTilePosition(rowOf(tilePosition),c)!=tilePosition){
         int app=getTilePosition(rowOf(tilePosition),c);
         if(arrayContains(conflicts,app)==false){conflicts=appendToArray(conflicts,new int[] {app});}
       }
-      if(getTile(c,columnOf(tilePosition))==getTile(tilePosition)&&getTilePosition(c,columnOf(tilePosition))!=tilePosition){
+      if(getTile(c,columnOf(tilePosition))==tiles[tilePosition]&&getTilePosition(c,columnOf(tilePosition))!=tilePosition){
         int app=getTilePosition(c,columnOf(tilePosition));
         if(arrayContains(conflicts,app)==false){conflicts=appendToArray(conflicts,new int[] {app});}
       }
-      if(getTileAtBox(boxOf(tilePosition),c)==getTile(tilePosition)&&getTilePositionAtBox(boxOf(tilePosition),c)!=tilePosition){
+      if(getTileAtBox(boxOf(tilePosition),c)==tiles[tilePosition]&&getTilePositionAtBox(boxOf(tilePosition),c)!=tilePosition){
         int app=getTilePositionAtBox(boxOf(tilePosition),c);
         if(arrayContains(conflicts,app)==false){conflicts=appendToArray(conflicts,new int[] {app});}
       }
