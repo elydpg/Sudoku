@@ -1,6 +1,11 @@
 import java.util.*;
-//import com.qqwing.*;
+import java.io.*;
+
 /** A data type to represent sudoku boards in Java. Sudokus are stored as an array of byte tiles. A sudoku board of size n contains n^4 tiles.
+  * 
+  * <br><br>
+  * 
+  * Sudoku generation from API comes from QQWing's sudoku generator https://qqwing.com
   */
 public class Sudoku{
   /** The smallest possible size for a Sudoku board*/
@@ -14,6 +19,15 @@ public class Sudoku{
       byte[] b=new byte[arr.length];
       for(int c=0;c<arr.length;c++){
         b[c]=Byte.parseByte(arr[c]);
+      }
+      return b;
+    }
+    
+    private static byte[] apiStringToByteArray(String api){
+      byte[] b=new byte[api.length()];
+      for(int c=0;c<b.length;c++){
+        b[c]=(Byte.parseByte(""+api.charAt(c)));
+        b[c]--;
       }
       return b;
     }
@@ -128,49 +142,86 @@ public class Sudoku{
         tiles[c]=-1;
       }
     }
-    /** IN PROGRESS Constructs a random valid Sudoku using one source of randomness*/
-    public Sudoku(int size,int missingTiles,Random random){
-      this(size,missingTiles,random,random);
-    }
-    
-    //TODO: get sudoku from api
-    
-    /** IN PROGRESS Constructs a random valid Sudoku.*/
-    public Sudoku(int size,int missingTiles,Random random1,Random random2){
-      Sudoku s=new Sudoku(size);
-      byte[][] availableNumbers=new byte[s.tiles.length][0];
-      for(int c=0;c<s.tiles.length;c++){
-      availableNumbers[c]=naturalBytesUntil(s.getSize()*s.getSize());
-      }
-      int ct=0;
-      while(ct<s.tiles.length){
-          if(availableNumbers[ct].length==0){s.tiles[ct]=-1;availableNumbers[ct]=naturalBytesUntil(s.getSize()*s.getSize());ct--;}
-          else{
-          int rnd=random1.nextInt(availableNumbers[ct].length);
-          s.tiles[ct]=availableNumbers[ct][rnd];
-          availableNumbers[ct]=removeByteElement(availableNumbers[ct],rnd);
-          if(s.conflictingTilePositions(ct).length==0){ct++;}
-          }
-          }
-      s=new Sudoku(s.tiles,missingTiles,random2);
+    /**Constructs a random valid Sudoku. Equivalent to generateSolved(new Sudoku(size),random);*/
+    public Sudoku(int size,Random random){
+      Sudoku s=generateSolved(new Sudoku(size),random);
       tiles=s.tiles;
     }
-    
-  /**Constructs a Sudoku from a list of tiles and an amount of tiles to remove*/
-  @Deprecated
-  public Sudoku(byte[] tileset,int missingTiles,Random random){
-    Sudoku s=new Sudoku(tileset);
-    if(s.tiles.length<=missingTiles){s=new Sudoku(s.getSize());}
-    else{
-    int[] potentialMissingTiles=naturalNumbersUntil(tileset.length);
-    for(int c=0;c<missingTiles;c++){
-         int rnd=random.nextInt(potentialMissingTiles.length);
-         s.tiles[potentialMissingTiles[rnd]]=-1;
-         potentialMissingTiles=removeElement(potentialMissingTiles,rnd);
+    /**Returns a solved version of the sudoku sud. Note that this method returns a distict object and does not modify the original Sudoku. 
+      * If there is more than one solution, this method will return a random solution.*/
+    public static Sudoku generateSolved(Sudoku sud,Random random){
+      if(sud.isValidSudoku()==false){throw new IllegalArgumentException("Sudoku is already invalid");}
+      if(sud.isSolvedSudoku()){throw new IllegalArgumentException("Sudoku is already solved");}
+      Sudoku s=copy(sud);
+      int[] positionsToSolve=s.unsolvedTilePositions();
+      byte[][] availableNumbers=new byte[positionsToSolve.length][0];
+       for(int c=0;c<positionsToSolve.length;c++){
+        availableNumbers[c]=naturalBytesUntil(s.getSize()*s.getSize());
+        }
+       int ct=0;
+       while(ct<positionsToSolve.length){
+        if(availableNumbers[ct].length==0){s.tiles[positionsToSolve[ct]]=-1;availableNumbers[ct]=naturalBytesUntil(s.getSize()*s.getSize());ct--;}
+        else{
+          int rnd=random.nextInt(availableNumbers[ct].length);
+          s.tiles[positionsToSolve[ct]]=availableNumbers[ct][rnd];
+          availableNumbers[ct]=removeByteElement(availableNumbers[ct],rnd);
+          if(s.conflictingTilePositions(positionsToSolve[ct]).length==0){ct++;}
         }
        }
-     tiles=s.tiles;
-  }
+       return s;
+      }
+    /**Returns a solved version of the sudoku sud. Note that this method returns a distict object and does not modify the original Sudoku. 
+      * If there is more than one solution, this method will return a random solution.*/ 
+    public static Sudoku generateSolved(Sudoku sud){
+      return generateSolved(sud,new Random());
+    }
+    
+    /**Generates amount Sudokus using the QQWIng API, with difficulty equal to difficulty. 
+      * Valid difficulties are "simple","easy","intermediate","expert","unknown",or "random".
+      * "random" difficulty chooses one of "simple","easy","intermediate", or "expert" with equal probability. */
+    public static Sudoku[] generateFromApi(int amount,String difficulty)throws Exception{
+      if(difficulty.equals("random")){difficulty=new String[] {"simple","easy","intermediate","expert"}[(int)(Math.random()*4)];}
+      File file = new File(new File(".").getAbsolutePath()+"/qqwing-1.3.4.jar");
+      file.setReadable(true, false);
+      file.setExecutable(true, false);
+      file.setWritable(true, false);
+      String[] command={"java","-jar",file.getCanonicalPath(),"--generate",""+amount, "--difficulty",difficulty,"--one-line"};
+      Process proc = Runtime.getRuntime().exec(command);
+      proc.waitFor();
+      // Then retreive the process output
+      InputStream in = proc.getInputStream();
+      InputStream err = proc.getErrorStream();
+      byte b[]=new byte[in.available()];
+      in.read(b,0,b.length);
+      String input=new String(b);
+      byte c[]=new byte[err.available()];
+      err.read(c,0,c.length);
+      String error=new String(c);
+      if(error.length()>0){throw new RuntimeException("Generator encountered a runtime error at api: "+error);}
+      String[] inputs=(input.replaceAll("[\\.]","0")).split("\n");
+      Sudoku[] sudokus=new Sudoku[amount];
+      for(int d=0;d<amount;d++){
+        sudokus[d]=new Sudoku(apiStringToByteArray(inputs[d]));
+      }
+      return sudokus;
+    }
+    /**Generates 1 Sudoku using the QQWIng API, with difficulty equal to difficulty. 
+      * Valid difficulties are "simple","easy","intermediate","expert","unknown",or "random".
+      * "random" difficulty chooses one of "simple","easy","intermediate", or "expert" with equal probability. */
+    public static Sudoku generateFromApi(String difficulty)throws Exception{
+      return generateFromApi(1,difficulty)[0];
+    }
+    
+    /**Generates amount Sudokus using the QQWIng API, with difficulty equal to "unknown". */
+    public static Sudoku[] generateFromApi(int amount)throws Exception{
+      return generateFromApi(amount,"unknown");
+    }
+    
+    /**Generates 1 Sudoku using the QQWIng API, with difficulty equal to "unknown". */
+    public static Sudoku generateFromApi()throws Exception{
+      return generateFromApi(1,"unknown")[0];
+    }
+    
   /** Returns this Sudoku board as a String*/
   public String toString(){
     String str="";
@@ -298,14 +349,11 @@ public class Sudoku{
   }
   /**Checks if this is a solved Sudoku. If so, returns true. Else, returns false.*/
   public boolean isSolvedSudoku(){
-    return tiles.length==removeElementVal(tiles,(byte)-1).length;
+    return unsolvedTilePositions().length==0;
   }
   /**Checks if this is a valid Sudoku. If so, returns true. Else, returns false.*/
   public boolean isValidSudoku(){
-    for(int c=0;c<getSize()*getSize();c++){
-      if((allEmementsUnique(getRow(c))&&allEmementsUnique(getColumn(c))&&allEmementsUnique(getBox(c)))==false){return false;}
-    }
-    return true;
+    return invalidTilePositions().length==0;
   }
   /**Checks if this is a valid Sudoku AND if this is a solved Sudoku. If so, returns true. Else, returns false.*/
   public boolean isValidSolvedSudoku(){
@@ -373,6 +421,6 @@ public class Sudoku{
     return conflictingTilePositions(getTilePositionAtBox(box,pos));
   }
   
-  public static void main(String[] args){
+  public static void main(String[] args)throws Exception{
   }
 }
