@@ -176,7 +176,7 @@ public class Sudoku{
       return generateSolved(sud,new Random());
     }
     
-    /**Generates amount Sudokus using the QQWIng API, with difficulty equal to difficulty. 
+    /**Generates amount size 3 Sudokus using the QQWIng API, with difficulty equal to difficulty. 
       * Valid difficulties are "simple","easy","intermediate","expert","unknown",or "random".
       * "random" difficulty chooses one of "simple","easy","intermediate", or "expert" with equal probability. */
     public static Sudoku[] generateFromApi(int amount,String difficulty)throws Exception{
@@ -205,19 +205,19 @@ public class Sudoku{
       }
       return sudokus;
     }
-    /**Generates 1 Sudoku using the QQWIng API, with difficulty equal to difficulty. 
+    /**Generates 1 size 3 Sudoku using the QQWIng API, with difficulty equal to difficulty. 
       * Valid difficulties are "simple","easy","intermediate","expert","unknown",or "random".
       * "random" difficulty chooses one of "simple","easy","intermediate", or "expert" with equal probability. */
     public static Sudoku generateFromApi(String difficulty)throws Exception{
       return generateFromApi(1,difficulty)[0];
     }
     
-    /**Generates amount Sudokus using the QQWIng API, with difficulty equal to "unknown". */
+    /**Generates amount size 3 Sudokus using the QQWIng API, with difficulty equal to "unknown". */
     public static Sudoku[] generateFromApi(int amount)throws Exception{
       return generateFromApi(amount,"unknown");
     }
     
-    /**Generates 1 Sudoku using the QQWIng API, with difficulty equal to "unknown". */
+    /**Generates 1 size 3 Sudoku using the QQWIng API, with difficulty equal to "unknown". */
     public static Sudoku generateFromApi()throws Exception{
       return generateFromApi(1,"unknown")[0];
     }
