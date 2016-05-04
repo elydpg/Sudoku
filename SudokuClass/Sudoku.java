@@ -1,3 +1,5 @@
+package SudokuClass;
+
 import java.util.*;
 import java.io.*;
 
@@ -181,7 +183,7 @@ public class Sudoku{
       * "random" difficulty chooses one of "simple","easy","intermediate", or "expert" with equal probability. */
     public static Sudoku[] generateFromApi(int amount,String difficulty)throws Exception{
       if(difficulty.equals("random")){difficulty=new String[] {"simple","easy","intermediate","expert"}[(int)(Math.random()*4)];}
-      File file = new File(new File(".").getAbsolutePath()+"/qqwing-1.3.4.jar");
+      File file = new File(Sudoku.class.getClassLoader().getResource("SudokuClass/qqwing-1.3.4.jar").toURI());
       file.setReadable(true, false);
       file.setExecutable(true, false);
       file.setWritable(true, false);
