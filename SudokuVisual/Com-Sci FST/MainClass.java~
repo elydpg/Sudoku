@@ -38,10 +38,4 @@ public class MainClass {
     public void actionPerformed (ActionEvent e) {
       System.exit(0);
     }}//quits the game when quit button is pressed
-  
-    static class check implements ActionListener {
-    public void actionPerformed (ActionEvent e) {
-      MethodsGUI.solutionDisplay();
-    }}
-  
 }//end of class
