@@ -5,7 +5,6 @@
 
 import java.io.*;
 import java.awt.*;
-import sun.audio.*;
 import javax.swing.*;
 import java.awt.event.*;
 import javax.swing.border.*;
@@ -49,8 +48,11 @@ public class MethodsGUI {
                                               "be viewed from our leaderboards. So go, play, have fun! Try your best to set a new high score!!");
   public static JLabel leaderboardLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
   public static JLabel optionLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
-  public static InputStream a;
-  public static AudioStream as;
+  //public static InputStream a;
+  public static Sudoku originalGame=new Sudoku(3);
+  public static Sudoku game=new Sudoku(3);
+  public static Sudoku solvedGame=new Sudoku(3);
+  public static JTextField [] arrayFields = new JTextField [81];
   //creates timer (must be global to prevent speed issues)
   public static Timer timey = new Timer (1000, new ActionListener() {
     public void actionPerformed (ActionEvent e) {  
@@ -158,22 +160,39 @@ public class MethodsGUI {
   public static void gridDisplay () {
     panel1.setVisible(false);
     panel2.removeAll();//resets previous board
-    Sudoku s=new Sudoku(3);
     try{
-      s=Sudoku.generateFromApi();
+      originalGame=Sudoku.generateFromApi();
     }catch(Exception e){System.err.println(e);}
-    JTextField [][] arrayFields = new JTextField [9][9];
-    for (int i = 0; i < 9; i++) {
-      for (int j = 0; j < 9; j++) {
-        byte currentTile=s.getTile(i,j);
-        arrayFields[i][j] = new JTextField(currentTile==-1?"":""+(currentTile+1));
-        arrayFields[i][j].setFont(new Font("American Typewriter", Font.PLAIN, 20));
-        arrayFields[i][j].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(10,10,10,10)));
-        if ((i < 3 && j < 3)||(i < 3 && j < 9 && j > 5)||(j < 6 && j > 2 && i < 6 && i > 2)||(i > 5 && i < 10 && j < 9 && j > 5)||(i > 5 && i < 10 && j < 3)) {
-          arrayFields[i][j].setBackground(new Color (216,216,216));
+    game=Sudoku.copy(originalGame);
+    solvedGame=Sudoku.generateSolved(game);
+    for (int i = 0; i < arrayFields.length; i++) {
+
+        byte currentTile=game.getTile(i);
+        if (currentTile == -1) {
+          arrayFields[i] = new JTextField("");
+          arrayFields[i].setFont(new Font("American Typewriter", Font.PLAIN, 20));
+        } else {
+          arrayFields[i] = new JTextField(""+(currentTile+1));
+          arrayFields[i].setEditable(false);
+          arrayFields[i].setFont(new Font("American Typewriter", Font.BOLD, 20));
+        }
+        arrayFields[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(10,10,10,10)));
+        if ((game.columnOf(i) < 3 && game.rowOf(i) < 3)||(game.columnOf(i) < 3 && game.rowOf(i) < 9 && game.rowOf(i) > 5)||(game.rowOf(i) < 6 && game.rowOf(i) > 2 && game.columnOf(i) < 6 && game.columnOf(i) > 2)||(game.columnOf(i) > 5 && game.columnOf(i) < 10 && game.rowOf(i) < 9 && game.rowOf(i) > 5)||(game.columnOf(i) > 5 && game.columnOf(i) < 10 && game.rowOf(i) < 3)) {
+          arrayFields[i].setBackground(new Color (216,216,216));
         }//end of if
-        panel2.add(arrayFields[i][j]); 
-      }//end of inner for loop
+        panel2.add(arrayFields[i]); 
+
+    }//end of outer for loop
+    frame1.add(panel2);
+    panel2.setVisible(true);
+    frame1.validate();//updates the screen
+  }//end of grid display method
+  
+    public static void solutionDisplay () {
+    panel1.setVisible(false);
+    int[] tilesToFill=originalGame.unsolvedTilePositions();
+    for (int i = 0; i < tilesToFill.length; i++) {
+          arrayFields[tilesToFill[i]].setText(""+(solvedGame.getTile(tilesToFill[i])+1));
     }//end of outer for loop
     frame1.add(panel2);
     panel2.setVisible(true);
@@ -193,6 +212,7 @@ public class MethodsGUI {
     quit.addActionListener(new MainClass.quit());
     back2.addActionListener(new MainClass.back());
     newGame.addActionListener(new MainClass.play());
+    check.addActionListener(new MainClass.check());
     gridDisplay();
   }//end of info window method
   
