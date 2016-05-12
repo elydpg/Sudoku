@@ -28,7 +28,6 @@ public class MethodsGUI {
   public static JButton leaderButton = new JButton (leaderImage);
   public static JButton optionButton = new JButton (optionImage);
   public static JButton back = new JButton("Go Back");
-  public static JButton newGame = new JButton ("Generate New Sudoku");
   public static JButton quit = new JButton("Quit Game");
   public static JButton back2 = new JButton("Go To Main Screen");
   public static JButton check = new JButton("Check Solution");
@@ -67,7 +66,7 @@ public class MethodsGUI {
     frame1.setLocationRelativeTo(null); 
     frame1.setResizable(false);
     frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame2.setSize(200,210);
+    frame2.setSize(200,180);
     frame2.setResizable(false);
     frame2.setUndecorated(true);//gets rid of tool bar at top of window
     
@@ -105,15 +104,14 @@ public class MethodsGUI {
     gifLabel.setBounds(30,150,250,250);
     title.setBounds(235,19,200,40);
     other.setBounds(2,490,598,100);
-    newGame.setBounds(15,90,170,30);
-    quit.setBounds(50,130,100,30);
+    quit.setBounds(50,95,100,30);
     time.setBounds(0,10,200,23);
     helpLabel.setBounds(15,0,570,280);
     back.setBounds(240,520,120,30);
     leaderboardLabel.setBounds(0,0,600,600);
     optionLabel.setBounds(0,0,600,600);
     back2.setBounds(30,50,140,30);
-    check.setBounds(40,170,120,30);
+    check.setBounds(40,125,120,30);
     
     //everything needed is added to all panels
     panel1.add(playButton);
@@ -123,7 +121,6 @@ public class MethodsGUI {
     panel1.add(gifLabel);
     panel1.add(title);
     panel1.add(other);
-    panel3.add(newGame);
     panel3.add(quit);
     panel3.add(time);
     panel3.add(back2);
@@ -193,6 +190,7 @@ public class MethodsGUI {
     int[] tilesToFill=originalGame.unsolvedTilePositions();
     for (int i = 0; i < tilesToFill.length; i++) {
           arrayFields[tilesToFill[i]].setText(""+(solvedGame.getTile(tilesToFill[i])+1));
+          arrayFields[tilesToFill[i]].setEditable(false);
     }//end of outer for loop
     frame1.add(panel2);
     panel2.setVisible(true);
@@ -211,7 +209,6 @@ public class MethodsGUI {
     timey.start();//starts the clock
     quit.addActionListener(new MainClass.quit());
     back2.addActionListener(new MainClass.back());
-    newGame.addActionListener(new MainClass.play());
     check.addActionListener(new MainClass.check());
     gridDisplay();
   }//end of info window method
