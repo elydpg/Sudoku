@@ -3,6 +3,8 @@
 //Date created: March 26, 2016
 //Date modified: April 26, 2016
 import java.awt.event.*;
+import java.awt.Component;
+import SudokuClass.Sudoku;
 public class MainClass { 
   public static void main (String [] args) throws Exception {
     MethodsGUI.intro();
@@ -39,9 +41,26 @@ public class MainClass {
       System.exit(0);
     }}//quits the game when quit button is pressed
   
-    static class check implements ActionListener {
+  static class check implements ActionListener {
     public void actionPerformed (ActionEvent e) {
       MethodsGUI.solutionDisplay();
     }}
   
+  static class locate implements FocusListener{
+    public void focusGained (FocusEvent e) {
+      if (MethodsGUI.gameOver==false) {
+        int el=0;
+        Component theField=e.getComponent();
+        while(el<81){
+          if(MethodsGUI.arrayFields[el]==theField){break;}
+          el++;
+        }
+      }
+    }
+    public void focusLost (FocusEvent e) {
+      if (MethodsGUI.gameOver==false) {
+      }
+    }
+  }
+
 }//end of class

@@ -12,6 +12,7 @@ import SudokuClass.Sudoku;
 
 public class MethodsGUI {
   public static long timeKeeper = 0;
+  public static boolean gameOver = false;
   public static JFrame frame1 = new JFrame("Sudoku"); 
   public static JFrame frame2 = new JFrame("Info:");
   public static JPanel panel1 = new JPanel();
@@ -114,15 +115,6 @@ public class MethodsGUI {
     back2.setBounds(30,50,140,30);
     check.setBounds(40,125,120,30);
     
-    //gets coordinates of every click
-    panel2.addMouseListener(new MouseAdapter() {
-      public void mousePressed(MouseEvent e) { 
-        final int xPos = e.getX();
-        final int yPos = e.getY();
-        System.out.println("Cordinates are: " + xPos + ", " + yPos);
-      }
-    });
-    
     //everything needed is added to all panels
     panel1.add(playButton);
     panel1.add(helpButton);
@@ -166,6 +158,7 @@ public class MethodsGUI {
   
   public static void gridDisplay () {
     panel1.setVisible(false);
+    gameOver = false;
     panel2.removeAll();//resets previous board
     try{
       originalGame=Sudoku.generateFromApi();
@@ -178,6 +171,7 @@ public class MethodsGUI {
       if (currentTile == -1) {
         arrayFields[i] = new JTextField("");
         arrayFields[i].setFont(new Font("American Typewriter", Font.PLAIN, 20));
+        arrayFields[i].addFocusListener(new MainClass.locate ()); 
       } else {
         arrayFields[i] = new JTextField(""+(currentTile+1));
         arrayFields[i].setEditable(false);
@@ -188,15 +182,18 @@ public class MethodsGUI {
         arrayFields[i].setBackground(new Color (216,216,216));
       }//end of if
       panel2.add(arrayFields[i]); 
+                
       
     }//end of outer for loop
     frame1.add(panel2);
     panel2.setVisible(true);
     frame1.validate();//updates the screen
   }//end of grid display method
+ 
   
   public static void solutionDisplay () {
     panel1.setVisible(false);
+    gameOver = true;
     int[] tilesToFill=originalGame.unsolvedTilePositions();
     for (int i = 0; i < tilesToFill.length; i++) {
       arrayFields[tilesToFill[i]].setText(""+(solvedGame.getTile(tilesToFill[i])+1));
