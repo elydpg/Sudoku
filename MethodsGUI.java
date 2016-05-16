@@ -47,12 +47,12 @@ public class MethodsGUI {
                                               "be viewed from our leaderboards. So go, play, have fun! Try your best to set a new high score!!");
   public static JLabel leaderboardLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
   public static JLabel optionLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
-  //public static InputStream a;
   public static Sudoku originalGame=new Sudoku(3);
   public static Sudoku game=new Sudoku(3);
   public static Sudoku solvedGame=new Sudoku(3);
   public static JTextField [] arrayFields = new JTextField [81];
   public static String backupText="";
+  
   //creates timer (must be global to prevent speed issues)
   public static Timer timey = new Timer (1000, new ActionListener() {
     public void actionPerformed (ActionEvent e) {  
@@ -114,6 +114,15 @@ public class MethodsGUI {
     back2.setBounds(30,50,140,30);
     check.setBounds(40,125,120,30);
     
+    //gets coordinates of every click
+    panel2.addMouseListener(new MouseAdapter() {
+      public void mousePressed(MouseEvent e) { 
+        final int xPos = e.getX();
+        final int yPos = e.getY();
+        System.out.println("Cordinates are: " + xPos + ", " + yPos);
+      }
+    });
+    
     //everything needed is added to all panels
     panel1.add(playButton);
     panel1.add(helpButton);
@@ -164,34 +173,34 @@ public class MethodsGUI {
     game=Sudoku.copy(originalGame);
     solvedGame=Sudoku.generateSolved(game);
     for (int i = 0; i < arrayFields.length; i++) {
-
-        byte currentTile=game.getTile(i);
-        if (currentTile == -1) {
-          arrayFields[i] = new JTextField("");
-          arrayFields[i].setFont(new Font("American Typewriter", Font.PLAIN, 20));
-        } else {
-          arrayFields[i] = new JTextField(""+(currentTile+1));
-          arrayFields[i].setEditable(false);
-          arrayFields[i].setFont(new Font("American Typewriter", Font.BOLD, 20));
-        }
-        arrayFields[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(10,10,10,10)));
-        if ((game.columnOf(i) < 3 && game.rowOf(i) < 3)||(game.columnOf(i) < 3 && game.rowOf(i) < 9 && game.rowOf(i) > 5)||(game.rowOf(i) < 6 && game.rowOf(i) > 2 && game.columnOf(i) < 6 && game.columnOf(i) > 2)||(game.columnOf(i) > 5 && game.columnOf(i) < 10 && game.rowOf(i) < 9 && game.rowOf(i) > 5)||(game.columnOf(i) > 5 && game.columnOf(i) < 10 && game.rowOf(i) < 3)) {
-          arrayFields[i].setBackground(new Color (216,216,216));
-        }//end of if
-        panel2.add(arrayFields[i]); 
-
+      
+      byte currentTile=game.getTile(i);
+      if (currentTile == -1) {
+        arrayFields[i] = new JTextField("");
+        arrayFields[i].setFont(new Font("American Typewriter", Font.PLAIN, 20));
+      } else {
+        arrayFields[i] = new JTextField(""+(currentTile+1));
+        arrayFields[i].setEditable(false);
+        arrayFields[i].setFont(new Font("American Typewriter", Font.BOLD, 20));
+      }
+      arrayFields[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(10,10,10,10)));
+      if ((game.columnOf(i) < 3 && game.rowOf(i) < 3)||(game.columnOf(i) < 3 && game.rowOf(i) < 9 && game.rowOf(i) > 5)||(game.rowOf(i) < 6 && game.rowOf(i) > 2 && game.columnOf(i) < 6 && game.columnOf(i) > 2)||(game.columnOf(i) > 5 && game.columnOf(i) < 10 && game.rowOf(i) < 9 && game.rowOf(i) > 5)||(game.columnOf(i) > 5 && game.columnOf(i) < 10 && game.rowOf(i) < 3)) {
+        arrayFields[i].setBackground(new Color (216,216,216));
+      }//end of if
+      panel2.add(arrayFields[i]); 
+      
     }//end of outer for loop
     frame1.add(panel2);
     panel2.setVisible(true);
     frame1.validate();//updates the screen
   }//end of grid display method
   
-    public static void solutionDisplay () {
+  public static void solutionDisplay () {
     panel1.setVisible(false);
     int[] tilesToFill=originalGame.unsolvedTilePositions();
     for (int i = 0; i < tilesToFill.length; i++) {
-          arrayFields[tilesToFill[i]].setText(""+(solvedGame.getTile(tilesToFill[i])+1));
-          arrayFields[tilesToFill[i]].setEditable(false);
+      arrayFields[tilesToFill[i]].setText(""+(solvedGame.getTile(tilesToFill[i])+1));
+      arrayFields[tilesToFill[i]].setEditable(false);
     }//end of outer for loop
     frame1.add(panel2);
     panel2.setVisible(true);
