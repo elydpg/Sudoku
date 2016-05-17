@@ -55,6 +55,14 @@ public class MainClass {
           if(MethodsGUI.arrayFields[el]==theField){break;}
           el++;
         }
+        MethodsGUI.arrayFields[el].selectAll();
+        MethodsGUI.backupText=MethodsGUI.arrayFields[el].getText();
+        //while(MethodsGUI.arrayFields[el].getText().equals(MethodsGUI.backupText)){
+        //  if(MethodsGUI.arrayFields[el].getText().length()>1){MethodsGUI.arrayFields[el].setText(MethodsGUI.backupText);}
+        //  if(MethodsGUI.arrayFields[el].getText().matches("[^1-9\\ ]")==false){MethodsGUI.arrayFields[el].setText(MethodsGUI.backupText);}
+        //  if(MethodsGUI.arrayFields[el].getText().equals(" ")){MethodsGUI.arrayFields[el].setText("");}
+        //}
+        System.out.println("Success");
       }
     }
     public void focusLost (FocusEvent e) {
