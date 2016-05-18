@@ -5,6 +5,7 @@
 import java.awt.event.*;
 import java.awt.Component;
 import SudokuClass.Sudoku;
+
 public class MainClass { 
   public static void main (String [] args) throws Exception {
     MethodsGUI.intro();
@@ -54,21 +55,20 @@ public class MainClass {
         while(el<81){
           if(MethodsGUI.arrayFields[el]==theField){break;}
           el++;
-        }
+        }//end of if
         MethodsGUI.arrayFields[el].selectAll();
         MethodsGUI.backupText=MethodsGUI.arrayFields[el].getText();
         //while(MethodsGUI.arrayFields[el].getText().equals(MethodsGUI.backupText)){
         //  if(MethodsGUI.arrayFields[el].getText().length()>1){MethodsGUI.arrayFields[el].setText(MethodsGUI.backupText);}
         //  if(MethodsGUI.arrayFields[el].getText().matches("[^1-9\\ ]")==false){MethodsGUI.arrayFields[el].setText(MethodsGUI.backupText);}
         //  if(MethodsGUI.arrayFields[el].getText().equals(" ")){MethodsGUI.arrayFields[el].setText("");}
-        //}
+        //}//end of while loop
         System.out.println("Success");
-      }
-    }
+      }//end of if
+    }//end of focus gained
     public void focusLost (FocusEvent e) {
       if (MethodsGUI.gameOver==false) {
-      }
-    }
-  }
-
+      }//end of if
+    }//end of focus lost
+  }//end of locate
 }//end of class

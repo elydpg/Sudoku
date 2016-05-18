@@ -91,7 +91,7 @@ public class MethodsGUI {
     optionButton.setBorderPainted(false);
     
     //sets font of all JLabels
-    title.setFont(new Font("American Typewriter", Font.PLAIN, 40));//of course they're all American Typewriter :)
+    title.setFont(new Font("American Typewriter", Font.PLAIN, 40));
     other.setFont(new Font("American Typewriter", Font.PLAIN, 14));
     time.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     helpLabel.setFont(new Font("American Typewriter", Font.PLAIN, 15));
@@ -106,7 +106,7 @@ public class MethodsGUI {
     gifLabel.setBounds(30,150,250,250);
     title.setBounds(235,19,200,40);
     other.setBounds(2,490,598,100);
-    quit.setBounds(50,85,100,30);
+    quit.setBounds(50,90,100,30);
     time.setBounds(0,10,200,23);
     helpLabel.setBounds(15,0,570,280);
     back.setBounds(240,520,120,30);
