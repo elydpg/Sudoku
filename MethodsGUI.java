@@ -52,6 +52,7 @@ public class MethodsGUI {
   public static Sudoku game=new Sudoku(3);
   public static Sudoku solvedGame=new Sudoku(3);
   public static JTextField [] arrayFields = new JTextField [81];
+  public static int selectedField=-1;
   public static String backupText="";
   
   //creates timer (must be global to prevent speed issues)
@@ -169,7 +170,7 @@ public class MethodsGUI {
       
       byte currentTile=game.getTile(i);
       if (currentTile == -1) {
-        arrayFields[i] = new JTextField("");
+        arrayFields[i] = new JTextField(" ");
         arrayFields[i].setFont(new Font("American Typewriter", Font.PLAIN, 20));
         arrayFields[i].addFocusListener(new MainClass.locate ()); 
         arrayFields[i].addKeyListener(new MainClass.key ());

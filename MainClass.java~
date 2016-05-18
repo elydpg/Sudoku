@@ -71,4 +71,13 @@ public class MainClass {
       }//end of if
     }//end of focus lost
   }//end of locate
+  
+  static class key implements KeyListener {
+    public void keyTyped (KeyEvent e) {
+
+    }
+    public void keyPressed (KeyEvent e) {}
+    public void keyReleased (KeyEvent e) {}
+  }
+  
 }//end of class

@@ -172,6 +172,7 @@ public class MethodsGUI {
         arrayFields[i] = new JTextField("");
         arrayFields[i].setFont(new Font("American Typewriter", Font.PLAIN, 20));
         arrayFields[i].addFocusListener(new MainClass.locate ()); 
+        arrayFields[i].addKeyListener(new MainClass.key ());
       } else {
         arrayFields[i] = new JTextField(""+(currentTile+1));
         arrayFields[i].setEditable(false);
