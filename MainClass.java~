@@ -50,34 +50,44 @@ public class MainClass {
   static class locate implements FocusListener{
     public void focusGained (FocusEvent e) {
       if (MethodsGUI.gameOver==false) {
-        int el=0;
+        MethodsGUI.selectedField=0;
         Component theField=e.getComponent();
-        while(el<81){
-          if(MethodsGUI.arrayFields[el]==theField){break;}
-          el++;
+        while(MethodsGUI.selectedField<81){
+          if(MethodsGUI.arrayFields[MethodsGUI.selectedField]==theField){break;}
+          MethodsGUI.selectedField++;
         }//end of if
-        MethodsGUI.arrayFields[el].selectAll();
-        MethodsGUI.backupText=MethodsGUI.arrayFields[el].getText();
+        MethodsGUI.arrayFields[MethodsGUI.selectedField].selectAll();
+        MethodsGUI.backupText=MethodsGUI.arrayFields[MethodsGUI.selectedField].getText();
         //while(MethodsGUI.arrayFields[el].getText().equals(MethodsGUI.backupText)){
         //  if(MethodsGUI.arrayFields[el].getText().length()>1){MethodsGUI.arrayFields[el].setText(MethodsGUI.backupText);}
-        //  if(MethodsGUI.arrayFields[el].getText().matches("[^1-9\\ ]")==false){MethodsGUI.arrayFields[el].setText(MethodsGUI.backupText);}
+        //  if(MethodsGUI.arrayFields[el].getText().matches("[^1-9\\ ]")==false&&MethodsGUI.arrayFields[el].getText().equals("")==false){MethodsGUI.arrayFields[el].setText(MethodsGUI.backupText);}
         //  if(MethodsGUI.arrayFields[el].getText().equals(" ")){MethodsGUI.arrayFields[el].setText("");}
         //}//end of while loop
-        System.out.println("Success");
       }//end of if
     }//end of focus gained
     public void focusLost (FocusEvent e) {
       if (MethodsGUI.gameOver==false) {
+        System.out.println("Success");
       }//end of if
     }//end of focus lost
   }//end of locate
   
   static class key implements KeyListener {
     public void keyTyped (KeyEvent e) {
-
+      if((""+e.getKeyChar()).matches("[1-9\\ ]")||e.getKeyChar()==8){
+      if(e.getKeyChar()==8){MethodsGUI.arrayFields[MethodsGUI.selectedField].setText(" ");}
+      MethodsGUI.game.setTile(MethodsGUI.selectedField,(byte)(e.getKeyChar()==32||e.getKeyChar()==8?-1:Character.getNumericValue(e.getKeyChar())-1));
+      System.out.println(MethodsGUI.game.getTile(MethodsGUI.selectedField));
+      MethodsGUI.frame1.requestFocusInWindow();
+      }
     }
     public void keyPressed (KeyEvent e) {}
-    public void keyReleased (KeyEvent e) {}
+    public void keyReleased (KeyEvent e) {
+      if(((""+e.getKeyChar()).matches("[1-9\\ ]")||e.getKeyChar()==8)==false||MethodsGUI.arrayFields[MethodsGUI.selectedField].getText().length()>1){
+        MethodsGUI.arrayFields[MethodsGUI.selectedField].setText(MethodsGUI.backupText);
+        MethodsGUI.frame1.requestFocusInWindow();
+      }
+    }
   }
   
 }//end of class
