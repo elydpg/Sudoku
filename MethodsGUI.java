@@ -47,13 +47,14 @@ public class MethodsGUI {
                                               "generates a sudoku for you and times you in seconds to complete it. Your time is then saved and can " + 
                                               "be viewed from our leaderboards. So go, play, have fun! Try your best to set a new high score!!");
   public static JLabel leaderboardLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
-  public static JLabel optionLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
   public static Sudoku originalGame=new Sudoku(3);
   public static Sudoku game=new Sudoku(3);
   public static Sudoku solvedGame=new Sudoku(3);
   public static JTextField [] arrayFields = new JTextField [81];
   public static int selectedField=-1;
   public static String backupText="";
+  public static String [] difficulty = {"simple","easy","intermediate","expert","random"};
+  public static JComboBox difficultySetting = new JComboBox (difficulty);
   
   //creates timer (must be global to prevent speed issues)
   public static Timer timey = new Timer (1000, new ActionListener() {
@@ -97,7 +98,9 @@ public class MethodsGUI {
     time.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     helpLabel.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     leaderboardLabel.setFont(new Font("American Typewriter", Font.PLAIN, 18));
-    optionLabel.setFont(new Font("American Typewriter", Font.PLAIN, 18));
+    
+    //difficulty stuff
+    difficultySetting.setSelectedIndex(4);
     
     //sets location of everything 
     playButton.setBounds(350,100,200,88);
@@ -112,9 +115,9 @@ public class MethodsGUI {
     helpLabel.setBounds(15,0,570,280);
     back.setBounds(240,520,120,30);
     leaderboardLabel.setBounds(0,0,600,600);
-    optionLabel.setBounds(0,0,600,600);
     back2.setBounds(30,50,140,30);
     check.setBounds(40,125,120,30);
+    difficultySetting.setBounds(200,200,200,50);
     
     //everything needed is added to all panels
     panel1.add(playButton);
@@ -130,8 +133,8 @@ public class MethodsGUI {
     panel4.add(back);
     panel4.add(helpLabel);
     panel4.add(leaderboardLabel);
-    panel4.add(optionLabel);
     panel3.add(check);
+    panel4.add(difficultySetting);
     
     frame1.add(panel4);
     frame2.add(panel3);
@@ -147,7 +150,6 @@ public class MethodsGUI {
     helpLabel.setVisible(false);
     back.setVisible(false);
     leaderboardLabel.setVisible(false);
-    optionLabel.setVisible(false);
     panel4.setVisible(false);
     panel2.setVisible(false);
     panel1.setVisible(true); 
@@ -162,7 +164,7 @@ public class MethodsGUI {
     gameOver = false;
     panel2.removeAll();//resets previous board
     try{
-      originalGame=Sudoku.generateFromApi();
+      originalGame=Sudoku.generateFromApi(difficulty[difficultySetting.getSelectedIndex()]);
     }catch(Exception e){System.err.println(e);}
     game=Sudoku.copy(originalGame);
     solvedGame=Sudoku.generateSolved(game);
@@ -186,7 +188,7 @@ public class MethodsGUI {
       panel2.add(arrayFields[i]); 
                 
       
-    }//end of outer for loop
+    }//end of for loop
     frame1.add(panel2);
     panel2.setVisible(true);
     frame1.validate();//updates the screen
@@ -205,7 +207,7 @@ public class MethodsGUI {
     tilesToFill=originalGame.solvedTilePositions();
     for (int i = 0; i < tilesToFill.length; i++) {
       arrayFields[tilesToFill[i]].setForeground(new Color (0,0,0));
-    }
+    }//end of second for loop
     frame1.add(panel2);
     panel2.setVisible(true);
     frame1.validate();//updates the screen
@@ -247,7 +249,6 @@ public class MethodsGUI {
   
   public static void optionMethod () {
     panel1.setVisible(false);
-    optionLabel.setVisible(true);
     back.setVisible(true);
     panel4.setVisible(true);
     frame1.add(panel4);
