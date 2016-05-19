@@ -200,7 +200,12 @@ public class MethodsGUI {
     for (int i = 0; i < tilesToFill.length; i++) {
       arrayFields[tilesToFill[i]].setText(""+(solvedGame.getTile(tilesToFill[i])+1));
       arrayFields[tilesToFill[i]].setEditable(false);
-    }//end of outer for loop
+      arrayFields[tilesToFill[i]].setForeground(new Color (0,0,0));
+    }//end of first for loop
+    tilesToFill=originalGame.solvedTilePositions();
+    for (int i = 0; i < tilesToFill.length; i++) {
+      arrayFields[tilesToFill[i]].setForeground(new Color (0,0,0));
+    }
     frame1.add(panel2);
     panel2.setVisible(true);
     frame1.validate();//updates the screen
