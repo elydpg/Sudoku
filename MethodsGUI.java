@@ -11,7 +11,7 @@ import javax.swing.border.*;
 import SudokuClass.Sudoku;
 
 public class MethodsGUI {
-  public static long timeKeeper = 0;
+  public static long timeKeeper = 0, finalTime = 0;
   public static boolean gameOver = false;
   public static JFrame frame1 = new JFrame("Sudoku"); 
   public static JFrame frame2 = new JFrame("Info:");
@@ -36,7 +36,7 @@ public class MethodsGUI {
   public static JLabel time = new JLabel("Time: " + timeKeeper, SwingConstants.CENTER);
   public static JLabel other = new JLabel ("<html><center>This game was developed by Ely Golden, Zachary Minuk, and Ethan Orlander under " +
                                            "the supervision of Mark Rottmann at Tanenbaum CHAT Wallenberg Campus. All rights reserved. \u00a9");
-  public static JLabel helpLabel = new JLabel("<html><u>       How to play:</u><br><center>Using pure logic and requiring no math " + 
+  public static JLabel helpLabel = new JLabel("<html><center>Using pure logic and requiring no math " + 
                                               "to solve, these fascinating puzzles offer endless fun and intellectual entertainment to puzzle fans " + 
                                               "of all skills and ages. The Classic Sudoku is a number placing puzzle based on a 9x9 grid with several " + 
                                               "given numbers. The object is to place the numbers 1 to 9 in the empty squares so that each row, each " +
@@ -44,8 +44,12 @@ public class MethodsGUI {
                                               "combinations taking anything from five minutes to several hours to solve. This version, created kindly by " + 
                                               "Zachary Minuk, Ethan Orlander, and Ely Golden (under the supervision of Mark Rottman of course) " + 
                                               "generates a sudoku for you and times you in seconds to complete it. Your time is then saved and can " + 
-                                              "be viewed from our leaderboards. So go, play, have fun! Try your best to set a new high score!!");
+                                              "be viewed from our leaderboards. So go, play, have fun! Try your best to set a new high score!! <br><br>" + 
+                                              "In the options menu you can chose from a range of difficulties to challenge yourself if you want." + 
+                                              "<br><br>As you place numbers 1-9 in the sudoku board, you will get live feedback about whether that " + 
+                                              "number interferes with another in the same row/column/sub-grid. If it does interfere, it will turn red.");
   public static JLabel leaderboardLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
+  public static JLabel currentMode = new JLabel ("Current mode: ", SwingConstants.CENTER);
   public static Sudoku originalGame = new Sudoku(3);
   public static Sudoku game = new Sudoku(3);
   public static Sudoku solvedGame = new Sudoku(3);
@@ -53,7 +57,7 @@ public class MethodsGUI {
   public static int selectedField = -1;
   public static String backupText = "";
   public static String [] difficulty = {"random","simple","easy","intermediate","expert"};
-  public static JComboBox difficultySetting = new JComboBox (difficulty);
+  public static JComboBox <String> difficultySetting = new JComboBox <> (difficulty);
   public static JLabel setting = new JLabel ("Choose a dificulty setting:");
   
   //creates timer (must be global to prevent speed issues)
@@ -109,13 +113,14 @@ public class MethodsGUI {
     title.setBounds(235,19,200,40);
     other.setBounds(2,490,598,100);
     time.setBounds(0,10,200,23);
-    helpLabel.setBounds(15,0,570,280);
+    helpLabel.setBounds(15,15,570,500);
     back.setBounds(240,520,120,30);
     leaderboardLabel.setBounds(0,0,600,600);
     back2.setBounds(30,50,140,30);
     check.setBounds(40,90,120,30);
     difficultySetting.setBounds(290,200,200,50);
     setting.setBounds(90,200,190,50);
+    currentMode.setBounds(0,120,200,40);
     
     //everything needed is added to all panels and frames
     panel1.add(playButton);
@@ -128,6 +133,7 @@ public class MethodsGUI {
     panel3.add(time);
     panel3.add(back2);
     panel3.add(check);
+    panel3.add(currentMode);
     panel4.add(back);
     panel4.add(helpLabel);
     panel4.add(leaderboardLabel);
@@ -167,6 +173,7 @@ public class MethodsGUI {
     }catch(Exception e){System.err.println(e);}
     game=Sudoku.copy(originalGame);
     solvedGame=Sudoku.generateSolved(game);
+    currentMode.setText("Current Mode: " + difficulty[difficultySetting.getSelectedIndex()]);//updates JLabel in stat-window
     for (int i = 0; i < arrayFields.length; i++) {
       byte currentTile=game.getTile(i);
       if (currentTile == -1) {
@@ -189,7 +196,7 @@ public class MethodsGUI {
     panel2.setVisible(true);
     frame1.validate();//updates the screen
   }//end of grid display method
- 
+  
   
   public static void solutionDisplay () {
     panel1.setVisible(false);
@@ -251,5 +258,11 @@ public class MethodsGUI {
     frame1.add(panel4);
     back.addActionListener(new MainClass.back());
   }//end of help method
+  
+  public static void gameOver () {
+    finalTime = timeKeeper;
+    String name = JOptionPane.showInputDialog("Congrats on winning!! Please enter your name to get into our leaderboar system");
+    mainScreen();
+  }//end of game over method
   
 }//end of class

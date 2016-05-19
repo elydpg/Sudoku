@@ -74,8 +74,7 @@ public class MainClass {
         else{MethodsGUI.arrayFields[c].setForeground(new Color (255,0,0));}
       }//end of if
       if(MethodsGUI.game.equals(MethodsGUI.solvedGame)){
-        //auto-solution detection code here
-        System.out.println("You did it!");
+        MethodsGUI.gameOver();
       }//end of if
       MethodsGUI.frame1.requestFocusInWindow();
       }//end of if

@@ -52,7 +52,7 @@ public class MethodsGUI {
   public static JTextField [] arrayFields = new JTextField [81];
   public static int selectedField = -1;
   public static String backupText = "";
-  public static String [] difficulty = {"simple","easy","intermediate","expert","random"};
+  public static String [] difficulty = {"random","simple","easy","intermediate","expert"};
   public static JComboBox difficultySetting = new JComboBox (difficulty);
   public static JLabel setting = new JLabel ("Choose a dificulty setting:");
   
