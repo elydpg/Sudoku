@@ -29,9 +29,8 @@ public class MethodsGUI {
   public static JButton leaderButton = new JButton (leaderImage);
   public static JButton optionButton = new JButton (optionImage);
   public static JButton back = new JButton("Go Back");
-  public static JButton quit = new JButton("Quit Game");
   public static JButton back2 = new JButton("Go To Main Screen");
-  public static JButton check = new JButton("Check Solution");
+  public static JButton check = new JButton("Show Solution");
   public static JLabel gifLabel = new JLabel (gif);
   public static JLabel title = new JLabel ("Sudoku");
   public static JLabel time = new JLabel("Time: " + timeKeeper, SwingConstants.CENTER);
@@ -47,14 +46,15 @@ public class MethodsGUI {
                                               "generates a sudoku for you and times you in seconds to complete it. Your time is then saved and can " + 
                                               "be viewed from our leaderboards. So go, play, have fun! Try your best to set a new high score!!");
   public static JLabel leaderboardLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
-  public static Sudoku originalGame=new Sudoku(3);
-  public static Sudoku game=new Sudoku(3);
-  public static Sudoku solvedGame=new Sudoku(3);
+  public static Sudoku originalGame = new Sudoku(3);
+  public static Sudoku game = new Sudoku(3);
+  public static Sudoku solvedGame = new Sudoku(3);
   public static JTextField [] arrayFields = new JTextField [81];
-  public static int selectedField=-1;
-  public static String backupText="";
+  public static int selectedField = -1;
+  public static String backupText = "";
   public static String [] difficulty = {"simple","easy","intermediate","expert","random"};
   public static JComboBox difficultySetting = new JComboBox (difficulty);
+  public static JLabel setting = new JLabel ("Choose a dificulty setting:");
   
   //creates timer (must be global to prevent speed issues)
   public static Timer timey = new Timer (1000, new ActionListener() {
@@ -98,9 +98,7 @@ public class MethodsGUI {
     time.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     helpLabel.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     leaderboardLabel.setFont(new Font("American Typewriter", Font.PLAIN, 18));
-    
-    //difficulty stuff
-    difficultySetting.setSelectedIndex(4);
+    setting.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     
     //sets location of everything 
     playButton.setBounds(350,100,200,88);
@@ -110,16 +108,16 @@ public class MethodsGUI {
     gifLabel.setBounds(30,150,250,250);
     title.setBounds(235,19,200,40);
     other.setBounds(2,490,598,100);
-    quit.setBounds(50,90,100,30);
     time.setBounds(0,10,200,23);
     helpLabel.setBounds(15,0,570,280);
     back.setBounds(240,520,120,30);
     leaderboardLabel.setBounds(0,0,600,600);
     back2.setBounds(30,50,140,30);
-    check.setBounds(40,125,120,30);
-    difficultySetting.setBounds(200,200,200,50);
+    check.setBounds(40,90,120,30);
+    difficultySetting.setBounds(290,200,200,50);
+    setting.setBounds(90,200,190,50);
     
-    //everything needed is added to all panels
+    //everything needed is added to all panels and frames
     panel1.add(playButton);
     panel1.add(helpButton);
     panel1.add(leaderButton);
@@ -127,15 +125,14 @@ public class MethodsGUI {
     panel1.add(gifLabel);
     panel1.add(title);
     panel1.add(other);
-    panel3.add(quit);
     panel3.add(time);
     panel3.add(back2);
+    panel3.add(check);
     panel4.add(back);
     panel4.add(helpLabel);
     panel4.add(leaderboardLabel);
-    panel3.add(check);
     panel4.add(difficultySetting);
-    
+    panel4.add(setting);
     frame1.add(panel4);
     frame2.add(panel3);
     frame1.add(panel1);
@@ -150,6 +147,8 @@ public class MethodsGUI {
     helpLabel.setVisible(false);
     back.setVisible(false);
     leaderboardLabel.setVisible(false);
+    difficultySetting.setVisible(false);
+    setting.setVisible(false);
     panel4.setVisible(false);
     panel2.setVisible(false);
     panel1.setVisible(true); 
@@ -164,12 +163,11 @@ public class MethodsGUI {
     gameOver = false;
     panel2.removeAll();//resets previous board
     try{
-      originalGame=Sudoku.generateFromApi(difficulty[difficultySetting.getSelectedIndex()]);
+      originalGame = Sudoku.generateFromApi(difficulty[difficultySetting.getSelectedIndex()]);
     }catch(Exception e){System.err.println(e);}
     game=Sudoku.copy(originalGame);
     solvedGame=Sudoku.generateSolved(game);
     for (int i = 0; i < arrayFields.length; i++) {
-      
       byte currentTile=game.getTile(i);
       if (currentTile == -1) {
         arrayFields[i] = new JTextField(" ");
@@ -180,14 +178,12 @@ public class MethodsGUI {
         arrayFields[i] = new JTextField(""+(currentTile+1));
         arrayFields[i].setEditable(false);
         arrayFields[i].setFont(new Font("American Typewriter", Font.BOLD, 20));
-      }
+      }//end of if
       arrayFields[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(10,10,10,10)));
       if ((game.columnOf(i) < 3 && game.rowOf(i) < 3)||(game.columnOf(i) < 3 && game.rowOf(i) < 9 && game.rowOf(i) > 5)||(game.rowOf(i) < 6 && game.rowOf(i) > 2 && game.columnOf(i) < 6 && game.columnOf(i) > 2)||(game.columnOf(i) > 5 && game.columnOf(i) < 10 && game.rowOf(i) < 9 && game.rowOf(i) > 5)||(game.columnOf(i) > 5 && game.columnOf(i) < 10 && game.rowOf(i) < 3)) {
         arrayFields[i].setBackground(new Color (216,216,216));
       }//end of if
-      panel2.add(arrayFields[i]); 
-                
-      
+      panel2.add(arrayFields[i]);                 
     }//end of for loop
     frame1.add(panel2);
     panel2.setVisible(true);
@@ -223,7 +219,6 @@ public class MethodsGUI {
     timeKeeper = 0;//resets timer incase it is not the first game being played
     frame2.setVisible(true);
     timey.start();//starts the clock
-    quit.addActionListener(new MainClass.quit());
     back2.addActionListener(new MainClass.back());
     check.addActionListener(new MainClass.check());
     gridDisplay();
@@ -250,6 +245,8 @@ public class MethodsGUI {
   public static void optionMethod () {
     panel1.setVisible(false);
     back.setVisible(true);
+    difficultySetting.setVisible(true);
+    setting.setVisible(true);
     panel4.setVisible(true);
     frame1.add(panel4);
     back.addActionListener(new MainClass.back());
