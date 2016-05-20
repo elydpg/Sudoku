@@ -179,10 +179,8 @@ public class Sudoku{
     }
     
     /**Generates amount size 3 Sudokus using the QQWIng API, with difficulty equal to difficulty. 
-      * Valid difficulties are "simple","easy","intermediate","expert","unknown",or "random".
-      * "random" difficulty chooses one of "simple","easy","intermediate", or "expert" with equal probability. */
+      * Valid difficulties are "simple","easy","intermediate","expert", or "unknown". */
     public static Sudoku[] generateFromApi(int amount,String difficulty)throws Exception{
-      if(difficulty.equals("random")){difficulty=new String[] {"simple","easy","intermediate","expert"}[(int)(Math.random()*4)];}
       File file = new File(Sudoku.class.getClassLoader().getResource("SudokuClass/qqwing-1.3.4.jar").toURI());
       file.setReadable(true, false);
       file.setExecutable(true, false);
@@ -208,8 +206,7 @@ public class Sudoku{
       return sudokus;
     }
     /**Generates 1 size 3 Sudoku using the QQWIng API, with difficulty equal to difficulty. 
-      * Valid difficulties are "simple","easy","intermediate","expert","unknown",or "random".
-      * "random" difficulty chooses one of "simple","easy","intermediate", or "expert" with equal probability. */
+      * Valid difficulties are "simple","easy","intermediate","expert", or "unknown". */
     public static Sudoku generateFromApi(String difficulty)throws Exception{
       return generateFromApi(1,difficulty)[0];
     }
