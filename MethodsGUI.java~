@@ -143,6 +143,14 @@ public class MethodsGUI {
     frame2.add(panel3);
     frame1.add(panel1);
     frame1.setVisible(true);
+    
+    //initialize the JTextFields
+    for(int i=0;i<arrayFields.length;i++){
+      arrayFields[i] = new JTextField(" ");
+      arrayFields[i].addFocusListener(new MainClass.locate ()); 
+      arrayFields[i].addKeyListener(new MainClass.key ());
+    }
+    
     mainScreen();
   }//end of intro method
   
@@ -169,20 +177,19 @@ public class MethodsGUI {
     gameOver = false;
     panel2.removeAll();//resets previous board
     try{
-      originalGame = Sudoku.generateFromApi(difficulty[difficultySetting.getSelectedIndex()]);
+      originalGame = Sudoku.generateFromApi(difficultySetting.getSelectedIndex()==0?difficulty[((int)Math.random()*4)+1]:difficulty[difficultySetting.getSelectedIndex()]);
     }catch(Exception e){System.err.println(e);}
     game=Sudoku.copy(originalGame);
     solvedGame=Sudoku.generateSolved(game);
-    currentMode.setText("Current Mode: " + difficulty[difficultySetting.getSelectedIndex()]);//updates JLabel in stat-window
+    currentMode.setText("Current Difficulty: " + difficulty[difficultySetting.getSelectedIndex()]);//updates JLabel in stat-window
     for (int i = 0; i < arrayFields.length; i++) {
       byte currentTile=game.getTile(i);
       if (currentTile == -1) {
-        arrayFields[i] = new JTextField(" ");
+        arrayFields[i].setText(" ");
+        arrayFields[i].setEditable(true);
         arrayFields[i].setFont(new Font("American Typewriter", Font.PLAIN, 20));
-        arrayFields[i].addFocusListener(new MainClass.locate ()); 
-        arrayFields[i].addKeyListener(new MainClass.key ());
       } else {
-        arrayFields[i] = new JTextField(""+(currentTile+1));
+        arrayFields[i].setText(""+(currentTile+1));
         arrayFields[i].setEditable(false);
         arrayFields[i].setFont(new Font("American Typewriter", Font.BOLD, 20));
       }//end of if
