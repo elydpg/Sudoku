@@ -36,25 +36,25 @@ public class MethodsGUI {
   public static JLabel time = new JLabel("Time: " + timeKeeper, SwingConstants.CENTER);
   public static JLabel other = new JLabel ("<html><center>This game was developed by Ely Golden, Zachary Minuk, and Ethan Orlander under " +
                                            "the supervision of Mark Rottmann at Tanenbaum CHAT Wallenberg Campus. All rights reserved. \u00a9");
-  public static JLabel helpLabel = new JLabel("<html><center>Using pure logic and requiring no math " + 
-                                              "to solve, these fascinating puzzles offer endless fun and intellectual entertainment to puzzle fans " + 
-                                              "of all skills and ages. The Classic Sudoku is a number placing puzzle based on a 9x9 grid with several " + 
+  public static JLabel helpLabel = new JLabel("<html><center>The Classic Sudoku is a number placing puzzle based on a 9x9 grid with several " + 
                                               "given numbers. The object is to place the numbers 1 to 9 in the empty squares so that each row, each " +
                                               "column and each 3x3 box contains the same number only once. Sudoku puzzles come in endless number " + 
                                               "combinations taking anything from five minutes to several hours to solve. This version, created kindly by " + 
                                               "Zachary Minuk, Ethan Orlander, and Ely Golden (under the supervision of Mark Rottman of course) " + 
                                               "generates a sudoku for you and times you in seconds to complete it. Your time is then saved and can " + 
                                               "be viewed from our leaderboards. So go, play, have fun! Try your best to set a new high score!! <br><br>" + 
-                                              "In the options menu you can chose from a range of difficulties to challenge yourself if you want." + 
+                                              "In the options menu you can chose from a range of difficulties to challenge yourself with. "+ 
                                               "<br><br>As you place numbers 1-9 in the sudoku board, you will get live feedback about whether that " + 
-                                              "number interferes with another in the same row/column/sub-grid. If it does interfere, it will turn red.");
+                                              "number interferes with another in the same row/column/sub-grid. If it does interfere, it will turn red." + 
+                                              "<br><br>Once the game is correctly solved, you will automatically be redirected, there is no button to " + 
+                                              " press when you think you have solved it.");
   public static JLabel leaderboardLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
   public static JLabel currentMode = new JLabel ("Current mode: ", SwingConstants.CENTER);
   public static Sudoku originalGame = new Sudoku(3);
   public static Sudoku game = new Sudoku(3);
   public static Sudoku solvedGame = new Sudoku(3);
   public static JTextField [] arrayFields = new JTextField [81];
-  public static int selectedField = -1;
+  public static int selectedField = -1, width, height;
   public static String backupText = "";
   public static String [] difficulty = {"random","simple","easy","intermediate","expert"};
   public static JComboBox <String> difficultySetting = new JComboBox <> (difficulty);
@@ -104,6 +104,11 @@ public class MethodsGUI {
     leaderboardLabel.setFont(new Font("American Typewriter", Font.PLAIN, 18));
     setting.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     
+    //gets monitor resolution for window placement
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    width = (int)screenSize.getWidth();
+    height = (int)screenSize.getHeight();
+    
     //sets location of everything 
     playButton.setBounds(350,100,200,88);
     helpButton.setBounds(351,200,200,87);
@@ -127,6 +132,7 @@ public class MethodsGUI {
       arrayFields[i] = new JTextField(" ");
       arrayFields[i].addFocusListener(new MainClass.locate ()); 
       arrayFields[i].addKeyListener(new MainClass.key ());
+      arrayFields[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(10,10,10,10)));
     }//end of for loop
     
     //declares all action listeners
@@ -177,7 +183,6 @@ public class MethodsGUI {
   }//end of main Screen method
   
   public static void gridDisplay () {
-    panel1.setVisible(false);
     gameOver = false;
     panel2.removeAll();//resets previous board
     try{
@@ -197,15 +202,21 @@ public class MethodsGUI {
         arrayFields[i].setEditable(false);
         arrayFields[i].setFont(new Font("American Typewriter", Font.BOLD, 20));
       }//end of if
-      arrayFields[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(10,10,10,10)));
       if ((game.columnOf(i) < 3 && game.rowOf(i) < 3)||(game.columnOf(i) < 3 && game.rowOf(i) < 9 && game.rowOf(i) > 5)||(game.rowOf(i) < 6 && game.rowOf(i) > 2 && game.columnOf(i) < 6 && game.columnOf(i) > 2)||(game.columnOf(i) > 5 && game.columnOf(i) < 10 && game.rowOf(i) < 9 && game.rowOf(i) > 5)||(game.columnOf(i) > 5 && game.columnOf(i) < 10 && game.rowOf(i) < 3)) {
-        arrayFields[i].setBackground(new Color (216,216,216));
+        arrayFields[i].setBackground(new Color (216,216,216));//makes sub-grids a different colour
       }//end of if
       panel2.add(arrayFields[i]);                 
     }//end of for loop
+    
+    //positions both frames in centre of screen (regardless of monitor's resolution)
+    frame1.setLocation(((width-810)/2), ((height-650)/2));
+    frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);
+    timeKeeper = 0;//resets timer incase it is not the first game being played
+    panel1.setVisible(false);
+    timey.start();//starts the clock
     frame1.add(panel2);
+    frame2.setVisible(true);
     panel2.setVisible(true);
-    frame1.validate();//updates the screen
   }//end of grid display method
   
   public static void solutionDisplay () {
@@ -223,21 +234,7 @@ public class MethodsGUI {
     }//end of second for loop
     frame1.add(panel2);
     panel2.setVisible(true);
-    frame1.validate();//updates the screen
   }//end of grid display method
-  
-  public static void infoWindow () {
-    //positions both frames in centre of screen (regardless of monitor's resolution)
-    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    int width = (int)screenSize.getWidth();
-    int height = (int)screenSize.getHeight();
-    frame1.setLocation(((width-810)/2), ((height-650)/2));
-    frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);
-    timeKeeper = 0;//resets timer incase it is not the first game being played
-    frame2.setVisible(true);
-    timey.start();//starts the clock
-    gridDisplay();
-  }//end of info window method
   
   public static void helpMethod () {
     panel1.setVisible(false);
@@ -266,7 +263,7 @@ public class MethodsGUI {
   
   public static void gameOver () {
     finalTime = timeKeeper;
-    String name = JOptionPane.showInputDialog("Congrats on winning!! Please enter your name to get into our leaderboard system");
+    String name = JOptionPane.showInputDialog("Congrats on winning!! Please enter your name");
     mainScreen();
   }//end of game over method
   

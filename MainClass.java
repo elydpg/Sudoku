@@ -14,7 +14,7 @@ public class MainClass {
   //Below are action listeners that run certain methods when certain buttons are pressed
   static class play implements ActionListener {
     public void actionPerformed (ActionEvent e) {
-      MethodsGUI.infoWindow();
+      MethodsGUI.gridDisplay();
     }}//displays the sudoku board and info screen when play button is pressed
   
   static class help implements ActionListener {
@@ -53,7 +53,7 @@ public class MainClass {
           MethodsGUI.selectedField++;
         }//end of if
         MethodsGUI.arrayFields[MethodsGUI.selectedField].selectAll();
-        MethodsGUI.backupText=MethodsGUI.arrayFields[MethodsGUI.selectedField].getText().replaceAll("[\u200b]","");
+        MethodsGUI.backupText=MethodsGUI.arrayFields[MethodsGUI.selectedField].getText().replaceAll("[\u200b]","");//replaces with a zero width space
       }//end of if
     }//end of focus gained
     public void focusLost (FocusEvent e) {
