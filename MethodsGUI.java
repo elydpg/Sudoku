@@ -11,6 +11,8 @@ import javax.swing.border.*;
 import SudokuClass.Sudoku;
 
 public class MethodsGUI {
+  public static int runcount=0;
+  
   public static long timeKeeper = 0, finalTime = 0;
   public static boolean gameOver = false;
   public static JFrame frame1 = new JFrame("Sudoku"); 
@@ -264,6 +266,9 @@ public class MethodsGUI {
     panel4.setVisible(true);
     frame1.add(panel4);
     back.addActionListener(new MainClass.back());
+    
+    runcount++;
+    System.out.println(runcount);
   }//end of help method
   
   public static void gameOver () {
