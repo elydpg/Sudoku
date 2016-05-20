@@ -11,8 +11,6 @@ import javax.swing.border.*;
 import SudokuClass.Sudoku;
 
 public class MethodsGUI {
-  public static int runcount=0;
-  
   public static long timeKeeper = 0, finalTime = 0;
   public static boolean gameOver = false;
   public static JFrame frame1 = new JFrame("Sudoku"); 
@@ -124,6 +122,22 @@ public class MethodsGUI {
     setting.setBounds(90,200,190,50);
     currentMode.setBounds(0,120,200,40);
     
+    //initialize the JTextFields
+    for(int i=0;i<arrayFields.length;i++){
+      arrayFields[i] = new JTextField(" ");
+      arrayFields[i].addFocusListener(new MainClass.locate ()); 
+      arrayFields[i].addKeyListener(new MainClass.key ());
+    }//end of for loop
+    
+    //declares all action listeners
+    playButton.addActionListener(new MainClass.play ());   
+    helpButton.addActionListener(new MainClass.help());
+    leaderButton.addActionListener(new MainClass.leaderboard ());
+    optionButton.addActionListener(new MainClass.option ());
+    back.addActionListener(new MainClass.back());
+    back2.addActionListener(new MainClass.back());
+    check.addActionListener(new MainClass.check());
+    
     //everything needed is added to all panels and frames
     panel1.add(playButton);
     panel1.add(helpButton);
@@ -145,33 +159,21 @@ public class MethodsGUI {
     frame2.add(panel3);
     frame1.add(panel1);
     frame1.setVisible(true);
-    
-    //initialize the JTextFields
-    for(int i=0;i<arrayFields.length;i++){
-      arrayFields[i] = new JTextField(" ");
-      arrayFields[i].addFocusListener(new MainClass.locate ()); 
-      arrayFields[i].addKeyListener(new MainClass.key ());
-    }
-    
-    mainScreen();
+    mainScreen();//runs next method
   }//end of intro method
   
   public static void mainScreen () { 
     //makes sure only stuff needed is visible (incase user has switched between pages)
-    frame2.setVisible(false);
     frame1.setLocationRelativeTo(null);//centers main screen incase user has pressed back button from the play section 
     helpLabel.setVisible(false);
     back.setVisible(false);
     leaderboardLabel.setVisible(false);
     difficultySetting.setVisible(false);
     setting.setVisible(false);
+    frame2.setVisible(false);
     panel4.setVisible(false);
     panel2.setVisible(false);
-    panel1.setVisible(true); 
-    playButton.addActionListener(new MainClass.play ());   
-    helpButton.addActionListener(new MainClass.help());
-    leaderButton.addActionListener(new MainClass.leaderboard ());
-    optionButton.addActionListener(new MainClass.option ());
+    panel1.setVisible(true);
   }//end of main Screen method
   
   public static void gridDisplay () {
@@ -206,7 +208,6 @@ public class MethodsGUI {
     frame1.validate();//updates the screen
   }//end of grid display method
   
-  
   public static void solutionDisplay () {
     panel1.setVisible(false);
     gameOver = true;
@@ -235,8 +236,6 @@ public class MethodsGUI {
     timeKeeper = 0;//resets timer incase it is not the first game being played
     frame2.setVisible(true);
     timey.start();//starts the clock
-    back2.addActionListener(new MainClass.back());
-    check.addActionListener(new MainClass.check());
     gridDisplay();
   }//end of info window method
   
@@ -246,7 +245,6 @@ public class MethodsGUI {
     helpLabel.setVisible(true);
     panel4.setVisible(true);
     frame1.add(panel4);
-    back.addActionListener(new MainClass.back());
   }//end of help method
   
   public static void leaderboardMethod () {
@@ -255,7 +253,6 @@ public class MethodsGUI {
     leaderboardLabel.setVisible(true);
     panel4.setVisible(true);
     frame1.add(panel4);
-    back.addActionListener(new MainClass.back());
   }//end of leaderboard method
   
   public static void optionMethod () {
@@ -265,15 +262,11 @@ public class MethodsGUI {
     setting.setVisible(true);
     panel4.setVisible(true);
     frame1.add(panel4);
-    back.addActionListener(new MainClass.back());
-    
-    runcount++;
-    System.out.println(runcount);
   }//end of help method
   
   public static void gameOver () {
     finalTime = timeKeeper;
-    String name = JOptionPane.showInputDialog("Congrats on winning!! Please enter your name to get into our leaderboar system");
+    String name = JOptionPane.showInputDialog("Congrats on winning!! Please enter your name to get into our leaderboard system");
     mainScreen();
   }//end of game over method
   

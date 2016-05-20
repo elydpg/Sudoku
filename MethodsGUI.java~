@@ -11,6 +11,8 @@ import javax.swing.border.*;
 import SudokuClass.Sudoku;
 
 public class MethodsGUI {
+  public static int runcount=0;
+  
   public static long timeKeeper = 0, finalTime = 0;
   public static boolean gameOver = false;
   public static JFrame frame1 = new JFrame("Sudoku"); 
@@ -149,7 +151,16 @@ public class MethodsGUI {
       arrayFields[i] = new JTextField(" ");
       arrayFields[i].addFocusListener(new MainClass.locate ()); 
       arrayFields[i].addKeyListener(new MainClass.key ());
-    }
+    }//end of for loop
+    
+    //declares all action listeners
+    playButton.addActionListener(new MainClass.play ());   
+    helpButton.addActionListener(new MainClass.help());
+    leaderButton.addActionListener(new MainClass.leaderboard ());
+    optionButton.addActionListener(new MainClass.option ());
+    back.addActionListener(new MainClass.back());
+    back2.addActionListener(new MainClass.back());
+    check.addActionListener(new MainClass.check());
     
     mainScreen();
   }//end of intro method
@@ -166,10 +177,6 @@ public class MethodsGUI {
     panel4.setVisible(false);
     panel2.setVisible(false);
     panel1.setVisible(true); 
-    playButton.addActionListener(new MainClass.play ());   
-    helpButton.addActionListener(new MainClass.help());
-    leaderButton.addActionListener(new MainClass.leaderboard ());
-    optionButton.addActionListener(new MainClass.option ());
   }//end of main Screen method
   
   public static void gridDisplay () {
@@ -204,7 +211,6 @@ public class MethodsGUI {
     frame1.validate();//updates the screen
   }//end of grid display method
   
-  
   public static void solutionDisplay () {
     panel1.setVisible(false);
     gameOver = true;
@@ -233,8 +239,6 @@ public class MethodsGUI {
     timeKeeper = 0;//resets timer incase it is not the first game being played
     frame2.setVisible(true);
     timey.start();//starts the clock
-    back2.addActionListener(new MainClass.back());
-    check.addActionListener(new MainClass.check());
     gridDisplay();
   }//end of info window method
   
@@ -244,7 +248,6 @@ public class MethodsGUI {
     helpLabel.setVisible(true);
     panel4.setVisible(true);
     frame1.add(panel4);
-    back.addActionListener(new MainClass.back());
   }//end of help method
   
   public static void leaderboardMethod () {
@@ -253,7 +256,6 @@ public class MethodsGUI {
     leaderboardLabel.setVisible(true);
     panel4.setVisible(true);
     frame1.add(panel4);
-    back.addActionListener(new MainClass.back());
   }//end of leaderboard method
   
   public static void optionMethod () {
@@ -263,7 +265,6 @@ public class MethodsGUI {
     setting.setVisible(true);
     panel4.setVisible(true);
     frame1.add(panel4);
-    back.addActionListener(new MainClass.back());
   }//end of help method
   
   public static void gameOver () {
