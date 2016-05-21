@@ -20,7 +20,7 @@ public class MainClass {
   
   static class resume implements ActionListener {
     public void actionPerformed (ActionEvent e) {
-    //******STUFF HERE WILL RUN WHEN YOU PRESS RESUME GAME BUTTON ON MAIN SCREEN************
+      MethodsGUI.gridReveal();
     }}
   
   static class help implements ActionListener {

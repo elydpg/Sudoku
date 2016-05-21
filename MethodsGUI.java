@@ -12,8 +12,16 @@ import javax.swing.border.*;
 import SudokuClass.Sudoku;
 
 public class MethodsGUI {
-  public static long timeKeeper = 0, finalTime = 0;
-  public static boolean gameOver = false;
+  
+  //fields that need to be loaded from file
+  public static JLabel currentMode = new JLabel ("Current Difficulty: ", SwingConstants.CENTER);
+  public static long timeKeeper = 0;
+  public static boolean gameOver = true;
+  public static Sudoku originalGame = new Sudoku(3);
+  public static Sudoku game = new Sudoku(3);
+  public static Sudoku solvedGame = new Sudoku(3);
+  
+  //graphical fields
   public static JFrame frame1 = new JFrame("Sudoku"); 
   public static JFrame frame2 = new JFrame("Info:");
   public static JPanel panel1 = new JPanel();
@@ -36,7 +44,7 @@ public class MethodsGUI {
   public static JButton resumeButton = new JButton (resumeImage);
   public static JLabel gifLabel = new JLabel (gif);
   public static JLabel title = new JLabel ("Sudoku");
-  public static JLabel time = new JLabel("Time: " + timeKeeper, SwingConstants.CENTER);
+  public static JLabel time = new JLabel("Time: " + (timeKeeper/1000l), SwingConstants.CENTER);
   public static JLabel other = new JLabel ("<html><center>This game was developed by Ely Golden, Zachary Minuk, and Ethan Orlander under " +
                                            "the supervision of Mark Rottmann at Tanenbaum CHAT Wallenberg Campus. All rights reserved. \u00a9");
   public static JLabel helpLabel = new JLabel("<html><center>The Classic Sudoku is a number placing puzzle based on a 9x9 grid with several " + 
@@ -52,23 +60,22 @@ public class MethodsGUI {
                                               "<br><br>Once the game is correctly solved, you will automatically be redirected, there is no button to " + 
                                               " press when you think you have solved it.");
   public static JLabel leaderboardLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
-  public static JLabel currentMode = new JLabel ("Current mode: ", SwingConstants.CENTER);
-  public static Sudoku originalGame = new Sudoku(3);
-  public static Sudoku game = new Sudoku(3);
-  public static Sudoku solvedGame = new Sudoku(3);
+  public static JLabel setting = new JLabel ("Choose a dificulty setting:");
+  
+  //other fields
   public static JTextField [] arrayFields = new JTextField [81];
   public static int selectedField = -1, width, height;
   public static String backupText = "";
   public static String [] difficulty = {"random","simple","easy","intermediate","expert"};
   public static JComboBox <String> difficultySetting = new JComboBox <> (difficulty);
-  public static JLabel setting = new JLabel ("Choose a dificulty setting:");
+  public static long timestamp=System.currentTimeMillis()-timeKeeper;
   
   //creates timer (must be global to prevent speed issues)
-  public static Timer timey = new Timer (1000, new ActionListener() {
+  public static Timer timey = new Timer (50, new ActionListener() {
     public void actionPerformed (ActionEvent e) {  
-      timeKeeper++;
-      time.setText("Time: " + timeKeeper);//updates JLabel
-    }});;//end of timer
+      timeKeeper=System.currentTimeMillis()-timestamp;
+      time.setText("Time: " + (timeKeeper/1000l));//updates JLabel
+    }});//end of timer
   
   public static void intro () {
     //frames initialized and set up
@@ -175,6 +182,7 @@ public class MethodsGUI {
   }//end of intro method
   
   public static void mainScreen () { 
+    timey.stop();//stops the clock
     //makes sure only stuff needed is visible (incase user has switched between pages)
     frame1.setLocationRelativeTo(null);//centers main screen incase user has pressed back button from the play section 
     helpLabel.setVisible(false);
@@ -187,6 +195,20 @@ public class MethodsGUI {
     panel2.setVisible(false);
     panel1.setVisible(true);
   }//end of main Screen method
+  
+  public static void gridReveal() {
+    if(gameOver==false){
+    //positions both frames in centre of screen (regardless of monitor's resolution)
+    frame1.setLocation(((width-810)/2), ((height-650)/2));
+    frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);
+    panel1.setVisible(false);
+    timestamp=System.currentTimeMillis()-timeKeeper;
+    timey.start();//starts the clock
+    frame1.add(panel2);
+    frame2.setVisible(true);
+    panel2.setVisible(true);
+    }
+  }
   
   public static void gridDisplay () {
     gameOver = false;
@@ -231,9 +253,11 @@ public class MethodsGUI {
     frame1.setLocation(((width-810)/2), ((height-650)/2));
     frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);
     timeKeeper = 0;//resets timer incase it is not the first game being played
-    panel1.setVisible(false);
+    time.setText("Time: 0");//updates timer JLabel
+    timestamp=System.currentTimeMillis();
     timey.start();//starts the clock
     frame1.add(panel2);
+    panel1.setVisible(false);
     frame2.setVisible(true);
     panel2.setVisible(true);
   }//end of grid display method
@@ -252,6 +276,8 @@ public class MethodsGUI {
       arrayFields[tilesToFill[i]].setForeground(new Color (0,0,0));
     }//end of second for loop
     frame1.add(panel2);
+    timey.stop();
+    timeKeeper = -1;
     panel2.setVisible(true);
   }//end of grid display method
   
@@ -281,7 +307,7 @@ public class MethodsGUI {
   }//end of help method
   
   public static void gameOver () {
-    finalTime = timeKeeper;
+    timey.stop();
     String name = JOptionPane.showInputDialog("Congrats on winning!! Please enter your name");
     mainScreen();
   }//end of game over method
