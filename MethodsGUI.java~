@@ -209,7 +209,7 @@ public class MethodsGUI {
       frame2.setVisible(true);
       panel2.setVisible(true);
     } else {
-      JOptionPane option = new JOptionPane("<html><span style='font-size:2em'>There is no game to resume");
+      JOptionPane option = new JOptionPane("<html><font face = 'American Typewriter'>There is no game to resume");
       JDialog dialog = option.createDialog(null);
       dialog.setVisible(true);
     }//end of if

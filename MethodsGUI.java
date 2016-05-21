@@ -61,6 +61,8 @@ public class MethodsGUI {
                                               " press when you think you have solved it.");
   public static JLabel leaderboardLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
   public static JLabel setting = new JLabel ("Choose a dificulty setting:");
+  public static JOptionPane option = new JOptionPane("<html><font face = 'American Typewriter'>There is no game to resume");
+  public static JDialog dialog = option.createDialog(null);
   
   //other fields
   public static JTextField [] arrayFields = new JTextField [81];
@@ -209,8 +211,6 @@ public class MethodsGUI {
       frame2.setVisible(true);
       panel2.setVisible(true);
     } else {
-      JOptionPane option = new JOptionPane("<html><font face = 'American Typewriter'>There is no game to resume");
-      JDialog dialog = option.createDialog(null);
       dialog.setVisible(true);
     }//end of if
   }//end of grid reveal method
