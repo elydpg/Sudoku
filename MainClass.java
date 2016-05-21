@@ -18,6 +18,11 @@ public class MainClass {
       MethodsGUI.gridDisplay();
     }}//displays the sudoku board and info screen when play button is pressed
   
+  static class resume implements ActionListener {
+    public void actionPerformed (ActionEvent e) {
+    //******STUFF HERE WILL RUN WHEN YOU PRESS RESUME GAME BUTTON ON MAIN SCREEN************
+    }}
+  
   static class help implements ActionListener {
     public void actionPerformed (ActionEvent e) {
       MethodsGUI.helpMethod();

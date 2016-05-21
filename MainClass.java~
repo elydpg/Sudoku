@@ -4,6 +4,7 @@
 //Date modified: May 19, 2016
 import java.awt.event.*;
 import java.awt.*;
+import java.util.Arrays;
 import SudokuClass.Sudoku;
 
 public class MainClass { 
@@ -58,6 +59,9 @@ public class MainClass {
     }//end of focus gained
     public void focusLost (FocusEvent e) {
       if (MethodsGUI.gameOver==false) {
+        if(MethodsGUI.game.equals(MethodsGUI.solvedGame)){
+           MethodsGUI.gameOver();
+        }//end of if
       }//end of if
     }//end of focus lost
   }//end of locate
@@ -72,9 +76,6 @@ public class MainClass {
       for(int c=0;c<81;c++){
         if(MethodsGUI.game.conflictingTilePositions(c).length==0){MethodsGUI.arrayFields[c].setForeground(new Color (0,0,0));}
         else{MethodsGUI.arrayFields[c].setForeground(new Color (255,0,0));}
-      }//end of if
-      if(MethodsGUI.game.equals(MethodsGUI.solvedGame)){
-        MethodsGUI.gameOver();
       }//end of if
       MethodsGUI.frame1.requestFocusInWindow();
       }//end of if

@@ -24,6 +24,7 @@ public class MethodsGUI {
   public static ImageIcon helpImage = new ImageIcon ("help.png");
   public static ImageIcon leaderImage = new ImageIcon ("leaderboard.png");
   public static ImageIcon optionImage = new ImageIcon ("option.png");
+  public static ImageIcon resumeImage = new ImageIcon ("resume game.png");
   public static ImageIcon gif = new ImageIcon ("logo.gif");
   public static JButton playButton = new JButton (playImage);
   public static JButton helpButton = new JButton (helpImage);
@@ -32,6 +33,7 @@ public class MethodsGUI {
   public static JButton back = new JButton("Go Back");
   public static JButton back2 = new JButton("Go To Main Screen");
   public static JButton check = new JButton("Show Solution");
+  public static JButton resumeButton = new JButton (resumeImage);
   public static JLabel gifLabel = new JLabel (gif);
   public static JLabel title = new JLabel ("Sudoku");
   public static JLabel time = new JLabel("Time: " + timeKeeper, SwingConstants.CENTER);
@@ -87,6 +89,7 @@ public class MethodsGUI {
     
     //buttons change when mouse is over them
     playButton.setRolloverIcon(new ImageIcon("play hover.png"));
+    resumeButton.setRolloverIcon(new ImageIcon("resume game hover.png"));
     helpButton.setRolloverIcon(new ImageIcon("help hover.png"));
     leaderButton.setRolloverIcon(new ImageIcon("leaderboard hover.png"));
     optionButton.setRolloverIcon(new ImageIcon("option hover.png"));
@@ -96,9 +99,10 @@ public class MethodsGUI {
     helpButton.setBorderPainted(false);
     leaderButton.setBorderPainted(false);
     optionButton.setBorderPainted(false);
+    resumeButton.setBorderPainted(false);
     
     //sets font of all JLabels
-    title.setFont(new Font("American Typewriter", Font.PLAIN, 40));
+    title.setFont(new Font("American Typewriter", Font.PLAIN, 50));
     other.setFont(new Font("American Typewriter", Font.PLAIN, 14));
     time.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     helpLabel.setFont(new Font("American Typewriter", Font.PLAIN, 15));
@@ -111,12 +115,13 @@ public class MethodsGUI {
     height = (int)screenSize.getHeight();
     
     //sets location of everything 
-    playButton.setBounds(350,100,200,88);
-    helpButton.setBounds(351,200,200,87);
-    leaderButton.setBounds(351,300,200,87);
-    optionButton.setBounds(351,400,200,87);
-    gifLabel.setBounds(30,150,250,250);
-    title.setBounds(235,19,200,40);
+    playButton.setBounds(350,22,200,85);
+    resumeButton.setBounds(350,122,200,85);
+    helpButton.setBounds(350,222,200,85);
+    leaderButton.setBounds(350,322,200,85);
+    optionButton.setBounds(350,422,200,85);
+    gifLabel.setBounds(30,170,250,250);
+    title.setBounds(80,50,250,50);
     other.setBounds(2,490,598,100);
     time.setBounds(0,10,200,23);
     helpLabel.setBounds(15,15,570,500);
@@ -135,7 +140,8 @@ public class MethodsGUI {
     }//end of for loop
     
     //declares all action listeners
-    playButton.addActionListener(new MainClass.play ());   
+    playButton.addActionListener(new MainClass.play ()); 
+    resumeButton.addActionListener(new MainClass.resume());
     helpButton.addActionListener(new MainClass.help());
     leaderButton.addActionListener(new MainClass.leaderboard ());
     optionButton.addActionListener(new MainClass.option ());
@@ -145,6 +151,7 @@ public class MethodsGUI {
     
     //everything needed is added to all panels and frames
     panel1.add(playButton);
+    panel1.add(resumeButton);
     panel1.add(helpButton);
     panel1.add(leaderButton);
     panel1.add(optionButton);

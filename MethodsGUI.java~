@@ -4,6 +4,7 @@
 //Date modified: April 26, 2016
 
 import java.io.*;
+import java.util.Arrays;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -130,8 +131,6 @@ public class MethodsGUI {
     //initialize the JTextFields
     for(int i=0;i<arrayFields.length;i++){
       arrayFields[i] = new JTextField(" ");
-      arrayFields[i].addFocusListener(new MainClass.locate ()); 
-      arrayFields[i].addKeyListener(new MainClass.key ());
       arrayFields[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(10,10,10,10)));
     }//end of for loop
     
@@ -193,8 +192,21 @@ public class MethodsGUI {
     currentMode.setText("Current Difficulty: " + difficulty[difficultySetting.getSelectedIndex()]);//updates JLabel in stat-window
     for (int i = 0; i < arrayFields.length; i++) {
       byte currentTile=game.getTile(i);
+      
+      //remove relevant focus and key listeners
+      FocusListener[] f=arrayFields[i].getFocusListeners();
+      for (int j = 0; j < f.length; j++) {
+        if(f[j].getClass()==MainClass.locate.class){arrayFields[i].removeFocusListener(f[j]);}
+      }
+      KeyListener[] k=arrayFields[i].getKeyListeners();
+      for (int j = 0; j < k.length; j++) {
+        if(k[j].getClass()==MainClass.key.class){arrayFields[i].removeKeyListener(k[j]);}
+      }
+      
       if (currentTile == -1) {
         arrayFields[i].setText(" ");
+        arrayFields[i].addFocusListener(new MainClass.locate ()); 
+        arrayFields[i].addKeyListener(new MainClass.key ());
         arrayFields[i].setEditable(true);
         arrayFields[i].setFont(new Font("American Typewriter", Font.PLAIN, 20));
       } else {
