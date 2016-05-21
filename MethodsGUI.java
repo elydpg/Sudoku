@@ -199,20 +199,17 @@ public class MethodsGUI {
   
   public static void gridReveal() {  
     if(gameOver==false){
-    //positions both frames in centre of screen (regardless of monitor's resolution)
-    frame1.setLocation(((width-810)/2), ((height-650)/2));
-    frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);
-    panel1.setVisible(false);
-    timestamp=System.currentTimeMillis()-timeKeeper;
-    timey.start();//starts the clock
-    frame1.add(panel2);
-    frame2.setVisible(true);
-    panel2.setVisible(true);
+      //positions both frames in centre of screen (regardless of monitor's resolution)
+      frame1.setLocation(((width-810)/2), ((height-650)/2));
+      frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);
+      panel1.setVisible(false);
+      timestamp=System.currentTimeMillis()-timeKeeper;
+      timey.start();//starts the clock
+      frame1.add(panel2);
+      frame2.setVisible(true);
+      panel2.setVisible(true);
     } else {
-      JOptionPane option = new JOptionPane();
-      //I want the font set to American Typewriter but it doesn't work
-      option.setFont(new Font("American Typewriter", Font.PLAIN, 15));
-      option.setMessage("There is no game to resume");
+      JOptionPane option = new JOptionPane("<html><font face = 'American Typewriter'>There is no game to resume");
       JDialog dialog = option.createDialog(null);
       dialog.setVisible(true);
     }//end of if
@@ -239,7 +236,7 @@ public class MethodsGUI {
       for (int j = 0; j < k.length; j++) {
         if(k[j].getClass()==MainClass.key.class){arrayFields[i].removeKeyListener(k[j]);}
       }
-        arrayFields[i].setForeground(new Color (0,0,0));
+      arrayFields[i].setForeground(new Color (0,0,0));
       if (currentTile == -1) {
         arrayFields[i].setText(" ");
         arrayFields[i].addFocusListener(new MainClass.locate ()); 
