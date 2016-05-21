@@ -210,6 +210,8 @@ public class MethodsGUI {
     panel2.setVisible(true);
     } else {
       JOptionPane option = new JOptionPane();
+      //I want the font set to American Typewriter but it doesn't work
+      option.setFont(new Font("American Typewriter", Font.PLAIN, 15));
       option.setMessage("There is no game to resume");
       JDialog dialog = option.createDialog(null);
       dialog.setVisible(true);
@@ -237,7 +239,7 @@ public class MethodsGUI {
       for (int j = 0; j < k.length; j++) {
         if(k[j].getClass()==MainClass.key.class){arrayFields[i].removeKeyListener(k[j]);}
       }
-      
+        arrayFields[i].setForeground(new Color (0,0,0));
       if (currentTile == -1) {
         arrayFields[i].setText(" ");
         arrayFields[i].addFocusListener(new MainClass.locate ()); 
@@ -246,7 +248,6 @@ public class MethodsGUI {
         arrayFields[i].setFont(new Font("American Typewriter", Font.PLAIN, 20));
       } else {
         arrayFields[i].setText(""+(currentTile+1));
-        arrayFields[i].setForeground(new Color (0,0,0));
         arrayFields[i].setEditable(false);
         arrayFields[i].setFont(new Font("American Typewriter", Font.BOLD, 20));
       }//end of if
