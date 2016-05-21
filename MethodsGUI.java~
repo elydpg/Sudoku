@@ -241,6 +241,7 @@ public class MethodsGUI {
         arrayFields[i].setFont(new Font("American Typewriter", Font.PLAIN, 20));
       } else {
         arrayFields[i].setText(""+(currentTile+1));
+        arrayFields[i].setForeground(new Color (0,0,0));
         arrayFields[i].setEditable(false);
         arrayFields[i].setFont(new Font("American Typewriter", Font.BOLD, 20));
       }//end of if

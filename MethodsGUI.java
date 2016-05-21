@@ -197,7 +197,7 @@ public class MethodsGUI {
     panel1.setVisible(true);
   }//end of main Screen method
   
-  public static void gridReveal() {
+  public static void gridReveal() {  
     if(gameOver==false){
     //positions both frames in centre of screen (regardless of monitor's resolution)
     frame1.setLocation(((width-810)/2), ((height-650)/2));
@@ -208,8 +208,13 @@ public class MethodsGUI {
     frame1.add(panel2);
     frame2.setVisible(true);
     panel2.setVisible(true);
-    }
-  }
+    } else {
+      JOptionPane option = new JOptionPane();
+      option.setMessage("There is no game to resume");
+      JDialog dialog = option.createDialog(null);
+      dialog.setVisible(true);
+    }//end of if
+  }//end of grid reveal method
   
   public static void gridDisplay () {
     gameOver = false;
@@ -311,6 +316,7 @@ public class MethodsGUI {
   
   public static void gameOver () {
     timey.stop();
+    gameOver = true;
     String name = JOptionPane.showInputDialog("Congrats on winning!! Please enter your name");
     mainScreen();
   }//end of game over method
