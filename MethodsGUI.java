@@ -14,7 +14,7 @@ import SudokuClass.Sudoku;
 public class MethodsGUI {
   
   //fields that need to be loaded from file
-  public static JLabel currentMode = new JLabel ("Current Difficulty: ", SwingConstants.CENTER);
+  public static JLabel currentMode = new JLabel ("Difficulty: ", SwingConstants.CENTER);
   public static long timeKeeper = 0;
   public static boolean gameOver = true;
   public static Sudoku originalGame = new Sudoku(3);
@@ -115,6 +115,7 @@ public class MethodsGUI {
     helpLabel.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     leaderboardLabel.setFont(new Font("American Typewriter", Font.PLAIN, 18));
     setting.setFont(new Font("American Typewriter", Font.PLAIN, 15));
+    currentMode.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     
     //gets monitor resolution for window placement
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -218,7 +219,7 @@ public class MethodsGUI {
     }catch(Exception e){System.err.println(e);}
     game=Sudoku.copy(originalGame);
     solvedGame=Sudoku.generateSolved(game);
-    currentMode.setText("Current Difficulty: " + difficulty[difficultySetting.getSelectedIndex()]);//updates JLabel in stat-window
+    currentMode.setText("Difficulty: " + difficulty[difficultySetting.getSelectedIndex()]);//updates JLabel in stat-window
     for (int i = 0; i < arrayFields.length; i++) {
       byte currentTile=game.getTile(i);
       
@@ -260,6 +261,7 @@ public class MethodsGUI {
     panel1.setVisible(false);
     frame2.setVisible(true);
     panel2.setVisible(true);
+    check.setEnabled(true);
   }//end of grid display method
   
   public static void solutionDisplay () {
@@ -277,9 +279,9 @@ public class MethodsGUI {
     }//end of second for loop
     frame1.add(panel2);
     timey.stop();
-    timeKeeper = -1;
     panel2.setVisible(true);
-  }//end of grid display method
+    check.setEnabled(false);
+  }//end of show solution method
   
   public static void helpMethod () {
     panel1.setVisible(false);
