@@ -9,17 +9,21 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import javax.swing.border.*;
+import org.json.*;
+import ReadWrite.FileIO;
 import SudokuClass.Sudoku;
 
 public class MethodsGUI {
-  
   //fields that need to be loaded from file
-  public static JLabel currentMode = new JLabel ("Difficulty: ", SwingConstants.CENTER);
-  public static long timeKeeper = 0;
-  public static boolean gameOver = true;
-  public static Sudoku originalGame = new Sudoku(3);
-  public static Sudoku game = new Sudoku(3);
-  public static Sudoku solvedGame = new Sudoku(3);
+    //method required to deal with uncaught exception in global declaration
+  public static JSONObject getFileData(){try{return new JSONObject(new String(FileIO.readBinary(new RandomAccessFile("gamestate.json","rw")),"UTF-8"));}catch(Exception e){return new JSONObject();}}
+  public static JSONObject fileData= getFileData();
+  public static int difficultyIndex = fileData.getInt("difficultyIndex");
+  public static long timeKeeper = fileData.getLong("timeKeeper");
+  public static boolean gameOver = fileData.getBoolean("gameOver");
+  public static Sudoku originalGame = Sudoku.constructFromString(fileData.getString("originalGame"));
+  public static Sudoku game = Sudoku.constructFromString(fileData.getString("game"));
+  public static Sudoku solvedGame = Sudoku.constructFromString(fileData.getString("solvedGame"));
   
   //graphical fields
   public static JFrame frame1 = new JFrame("Sudoku"); 
@@ -44,6 +48,7 @@ public class MethodsGUI {
   public static JButton resumeButton = new JButton (resumeImage);
   public static JLabel gifLabel = new JLabel (gif);
   public static JLabel title = new JLabel ("Sudoku");
+  public static JLabel currentMode = new JLabel ("Difficulty: ", SwingConstants.CENTER);
   public static JLabel time = new JLabel("Time: " + (timeKeeper/1000l), SwingConstants.CENTER);
   public static JLabel other = new JLabel ("<html><center>This game was developed by Ely Golden, Zachary Minuk, and Ethan Orlander under " +
                                            "the supervision of Mark Rottmann at Tanenbaum CHAT Wallenberg Campus. All rights reserved. \u00a9");
@@ -143,11 +148,12 @@ public class MethodsGUI {
     setting.setBounds(90,200,190,50);
     currentMode.setBounds(0,120,200,40);
     
-    //initialize the JTextFields
+    //initialize the JTextFields and add them to the panel
     for(int i=0;i<arrayFields.length;i++){
       arrayFields[i] = new JTextField(" ");
       arrayFields[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(10,10,10,10)));
     }//end of for loop
+    addGameToPanel();
     
     //declares all action listeners
     playButton.addActionListener(new MainClass.play ()); 
@@ -182,6 +188,9 @@ public class MethodsGUI {
     frame1.add(panel1);
     frame1.setVisible(true);
     mainScreen();//runs next method
+    
+    //sets settings for options to what they were
+    difficultySetting.setSelectedIndex(difficultyIndex);
   }//end of intro method
   
   public static void mainScreen () { 
@@ -201,6 +210,8 @@ public class MethodsGUI {
   
   public static void gridReveal() {  
     if(gameOver==false){
+      checkInvalidTiles();
+      currentMode.setText("Difficulty: " + difficulty[difficultyIndex]);//updates JLabel in stat-window
       //positions both frames in centre of screen (regardless of monitor's resolution)
       frame1.setLocation(((width-810)/2), ((height-650)/2));
       frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);
@@ -217,43 +228,14 @@ public class MethodsGUI {
   
   public static void gridDisplay () {
     gameOver = false;
-    panel2.removeAll();//resets previous board
+    difficultyIndex = difficultySetting.getSelectedIndex();
     try{
-      originalGame = Sudoku.generateFromApi(difficultySetting.getSelectedIndex()==0?difficulty[((int)Math.random()*4)+1]:difficulty[difficultySetting.getSelectedIndex()]);
+      originalGame = Sudoku.generateFromApi(difficultyIndex==0?difficulty[((int)Math.random()*4)+1]:difficulty[difficultyIndex]);
     }catch(Exception e){System.err.println(e);}
     game=Sudoku.copy(originalGame);
     solvedGame=Sudoku.generateSolved(game);
-    currentMode.setText("Difficulty: " + difficulty[difficultySetting.getSelectedIndex()]);//updates JLabel in stat-window
-    for (int i = 0; i < arrayFields.length; i++) {
-      byte currentTile=game.getTile(i);
-      
-      //remove relevant focus and key listeners
-      FocusListener[] f=arrayFields[i].getFocusListeners();
-      for (int j = 0; j < f.length; j++) {
-        if(f[j].getClass()==MainClass.locate.class){arrayFields[i].removeFocusListener(f[j]);}
-      }
-      KeyListener[] k=arrayFields[i].getKeyListeners();
-      for (int j = 0; j < k.length; j++) {
-        if(k[j].getClass()==MainClass.key.class){arrayFields[i].removeKeyListener(k[j]);}
-      }
-      arrayFields[i].setForeground(new Color (0,0,0));
-      if (currentTile == -1) {
-        arrayFields[i].setText(" ");
-        arrayFields[i].addFocusListener(new MainClass.locate ()); 
-        arrayFields[i].addKeyListener(new MainClass.key ());
-        arrayFields[i].setEditable(true);
-        arrayFields[i].setFont(new Font("American Typewriter", Font.PLAIN, 20));
-      } else {
-        arrayFields[i].setText(""+(currentTile+1));
-        arrayFields[i].setEditable(false);
-        arrayFields[i].setFont(new Font("American Typewriter", Font.BOLD, 20));
-      }//end of if
-      if ((game.columnOf(i) < 3 && game.rowOf(i) < 3)||(game.columnOf(i) < 3 && game.rowOf(i) < 9 && game.rowOf(i) > 5)||(game.rowOf(i) < 6 && game.rowOf(i) > 2 && game.columnOf(i) < 6 && game.columnOf(i) > 2)||(game.columnOf(i) > 5 && game.columnOf(i) < 10 && game.rowOf(i) < 9 && game.rowOf(i) > 5)||(game.columnOf(i) > 5 && game.columnOf(i) < 10 && game.rowOf(i) < 3)) {
-        arrayFields[i].setBackground(new Color (216,216,216));//makes sub-grids a different colour
-      }//end of if
-      panel2.add(arrayFields[i]);                 
-    }//end of for loop
-    
+    currentMode.setText("Difficulty: " + difficulty[difficultyIndex]);//updates JLabel in stat-window
+    addGameToPanel();
     //positions both frames in centre of screen (regardless of monitor's resolution)
     frame1.setLocation(((width-810)/2), ((height-650)/2));
     frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);
@@ -286,6 +268,47 @@ public class MethodsGUI {
     panel2.setVisible(true);
     check.setEnabled(false);
   }//end of show solution method
+  
+  public static void addGameToPanel(){
+    panel2.removeAll();//resets previous board
+    for (int i = 0; i < arrayFields.length; i++) {
+      byte currentTile=originalGame.getTile(i);
+      byte currentGameTile=game.getTile(i);
+      
+      //remove relevant focus and key listeners
+      FocusListener[] f=arrayFields[i].getFocusListeners();
+      for (int j = 0; j < f.length; j++) {
+        if(f[j].getClass()==MainClass.locate.class){arrayFields[i].removeFocusListener(f[j]);}
+      }
+      KeyListener[] k=arrayFields[i].getKeyListeners();
+      for (int j = 0; j < k.length; j++) {
+        if(k[j].getClass()==MainClass.key.class){arrayFields[i].removeKeyListener(k[j]);}
+      }
+      arrayFields[i].setForeground(new Color (0,0,0));
+      if (currentTile == -1) {
+        arrayFields[i].addFocusListener(new MainClass.locate ()); 
+        arrayFields[i].addKeyListener(new MainClass.key ());
+        arrayFields[i].setEditable(true);
+        arrayFields[i].setFont(new Font("American Typewriter", Font.PLAIN, 20));
+      } else {
+        arrayFields[i].setText(""+(currentTile+1));
+        arrayFields[i].setEditable(false);
+        arrayFields[i].setFont(new Font("American Typewriter", Font.BOLD, 20));
+      }//end of if
+      arrayFields[i].setText(currentGameTile==-1?" ":""+(currentGameTile+1));
+      if ((game.columnOf(i) < 3 && game.rowOf(i) < 3)||(game.columnOf(i) < 3 && game.rowOf(i) < 9 && game.rowOf(i) > 5)||(game.rowOf(i) < 6 && game.rowOf(i) > 2 && game.columnOf(i) < 6 && game.columnOf(i) > 2)||(game.columnOf(i) > 5 && game.columnOf(i) < 10 && game.rowOf(i) < 9 && game.rowOf(i) > 5)||(game.columnOf(i) > 5 && game.columnOf(i) < 10 && game.rowOf(i) < 3)) {
+        arrayFields[i].setBackground(new Color (216,216,216));//makes sub-grids a different colour
+      }//end of if
+      panel2.add(arrayFields[i]);                 
+    }//end of for loop
+  }
+  
+  public static void checkInvalidTiles(){
+    for(int c=0;c<81;c++){
+        if(game.conflictingTilePositions(c).length==0){arrayFields[c].setForeground(new Color (0,0,0));}
+        else{arrayFields[c].setForeground(new Color (255,0,0));}
+      }
+  }
   
   public static void helpMethod () {
     panel1.setVisible(false);

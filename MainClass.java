@@ -2,14 +2,31 @@
 //Purpose: The main class of sudoku game, runs methods from other classes
 //Date created: March 26, 2016
 //Date modified: May 19, 2016
+import java.io.*;
 import java.awt.event.*;
 import java.awt.*;
 import java.util.Arrays;
+import org.json.*;
+import ReadWrite.FileIO;
 import SudokuClass.Sudoku;
 
 public class MainClass { 
   public static void main (String [] args) throws Exception {
     MethodsGUI.intro();
+    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+    public void run() {
+     MethodsGUI.fileData=new JSONObject();
+     MethodsGUI.fileData.put("solvedGame",MethodsGUI.game.toString());
+     MethodsGUI.fileData.put("game",MethodsGUI.game.toString());
+     MethodsGUI.fileData.put("originalGame",MethodsGUI.originalGame.toString());
+     MethodsGUI.fileData.put("gameOver",MethodsGUI.gameOver);
+     MethodsGUI.fileData.put("timeKeeper",MethodsGUI.timeKeeper);
+     MethodsGUI.fileData.put("difficultyIndex",MethodsGUI.difficultyIndex);
+     try{
+     FileIO.writeBinary(MethodsGUI.fileData.toString().getBytes("UTF-8"),new RandomAccessFile("gamestate.json","rw"));
+     }catch(Exception e){};
+     }
+}));
   }//end of main
   
   //Below are action listeners that run certain methods when certain buttons are pressed
@@ -78,10 +95,7 @@ public class MainClass {
       if(e.getKeyChar()==8){MethodsGUI.arrayFields[MethodsGUI.selectedField].setText(" ");}
       else{MethodsGUI.arrayFields[MethodsGUI.selectedField].setText("");}
       MethodsGUI.game.setTile(MethodsGUI.selectedField,(byte)(e.getKeyChar()==' '||e.getKeyChar()==8?-1:Character.getNumericValue(e.getKeyChar())-1));
-      for(int c=0;c<81;c++){
-        if(MethodsGUI.game.conflictingTilePositions(c).length==0){MethodsGUI.arrayFields[c].setForeground(new Color (0,0,0));}
-        else{MethodsGUI.arrayFields[c].setForeground(new Color (255,0,0));}
-      }//end of if
+      MethodsGUI.checkInvalidTiles();
       MethodsGUI.frame1.requestFocusInWindow();
       }//end of if
       else{
