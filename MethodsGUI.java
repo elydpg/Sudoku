@@ -19,6 +19,7 @@ public class MethodsGUI {
   public static JSONObject getFileData(){try{return new JSONObject(new String(FileIO.readBinary(new RandomAccessFile("gamestate.json","rw")),"UTF-8"));}catch(Exception e){return new JSONObject();}}
   public static JSONObject fileData= getFileData();
   public static int difficultyIndex = fileData.getInt("difficultyIndex");
+  public static int invalidTilesIndex = fileData.getInt("invalidTilesIndex");;
   public static long timeKeeper = fileData.getLong("timeKeeper");
   public static boolean gameOver = fileData.getBoolean("gameOver");
   public static Sudoku originalGame = Sudoku.constructFromString(fileData.getString("originalGame"));
@@ -65,8 +66,8 @@ public class MethodsGUI {
                                               "<br><br>Once the game is correctly solved, you will automatically be redirected, there is no button to " + 
                                               " press when you think you have solved it.");
   public static JLabel leaderboardLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
-  public static JLabel setting = new JLabel ("Choose a dificulty setting:");
-  public static JLabel hintSetting = new JLabel ("Choose your hint preferences:");
+  public static JLabel setting = new JLabel ("Difficulty:");
+  public static JLabel hintSetting = new JLabel ("Invalid Tiles:");
   public static JOptionPane option = new JOptionPane("<html><font face = 'American Typewriter'>There is no game to resume");
   public static JDialog dialog = option.createDialog(null);
   
@@ -125,6 +126,7 @@ public class MethodsGUI {
     helpLabel.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     leaderboardLabel.setFont(new Font("American Typewriter", Font.PLAIN, 18));
     setting.setFont(new Font("American Typewriter", Font.PLAIN, 15));
+    hintSetting.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     currentMode.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     
     //gets monitor resolution for window placement
@@ -147,9 +149,9 @@ public class MethodsGUI {
     leaderboardLabel.setBounds(0,0,600,600);
     back2.setBounds(30,50,140,30);
     check.setBounds(40,90,120,30);
-    difficultySetting.setBounds(290,100,200,50);
+    difficultySetting.setBounds(210,100,200,50);
     setting.setBounds(90,100,190,50);
-    hintBox.setBounds(290,200,200,50);
+    hintBox.setBounds(210,200,250,50);
     hintSetting.setBounds(90,200,190,50);
     currentMode.setBounds(0,120,200,40);
     
@@ -198,6 +200,7 @@ public class MethodsGUI {
     
     //sets settings for options to what they were
     difficultySetting.setSelectedIndex(difficultyIndex);
+    hintBox.setSelectedIndex(invalidTilesIndex);
   }//end of intro method
   
   public static void mainScreen () { 
@@ -314,8 +317,8 @@ public class MethodsGUI {
   
   public static void checkInvalidTiles(){
     for(int c=0;c<81;c++){
-        if(game.conflictingTilePositions(c).length==0){arrayFields[c].setForeground(new Color (0,0,0));}
-        else{arrayFields[c].setForeground(new Color (255,0,0));}
+        if(invalidTilesIndex>0&&(game.conflictingTilePositions(c).length!=0||(invalidTilesIndex==2&&game.getTile(c)!=solvedGame.getTile(c)))){arrayFields[c].setForeground(new Color (255,0,0));}
+        else{arrayFields[c].setForeground(new Color (0,0,0));}
       }
   }
   

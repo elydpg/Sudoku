@@ -16,11 +16,12 @@ public class MainClass {
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
     public void run() {
      MethodsGUI.fileData=new JSONObject();
-     MethodsGUI.fileData.put("solvedGame",MethodsGUI.game.toString());
+     MethodsGUI.fileData.put("solvedGame",MethodsGUI.solvedGame.toString());
      MethodsGUI.fileData.put("game",MethodsGUI.game.toString());
      MethodsGUI.fileData.put("originalGame",MethodsGUI.originalGame.toString());
      MethodsGUI.fileData.put("gameOver",MethodsGUI.gameOver);
      MethodsGUI.fileData.put("timeKeeper",MethodsGUI.timeKeeper);
+     MethodsGUI.fileData.put("invalidTilesIndex",MethodsGUI.invalidTilesIndex);
      MethodsGUI.fileData.put("difficultyIndex",MethodsGUI.difficultyIndex);
      try{
      FileIO.writeBinary(MethodsGUI.fileData.toString().getBytes("UTF-8"),new RandomAccessFile("gamestate.json","rw"));
@@ -57,6 +58,7 @@ public class MainClass {
   
   static class back implements ActionListener {
     public void actionPerformed (ActionEvent e) {
+      MethodsGUI.invalidTilesIndex = MethodsGUI.hintBox.getSelectedIndex();
       MethodsGUI.mainScreen();
     }}//runs the main screen method when the 'return home' button is pressed
   
