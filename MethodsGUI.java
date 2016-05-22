@@ -66,6 +66,7 @@ public class MethodsGUI {
                                               " press when you think you have solved it.");
   public static JLabel leaderboardLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
   public static JLabel setting = new JLabel ("Choose a dificulty setting:");
+  public static JLabel hintSetting = new JLabel ("Choose your hint preferences:");
   public static JOptionPane option = new JOptionPane("<html><font face = 'American Typewriter'>There is no game to resume");
   public static JDialog dialog = option.createDialog(null);
   
@@ -74,7 +75,9 @@ public class MethodsGUI {
   public static int selectedField = -1, width, height;
   public static String backupText = "";
   public static String [] difficulty = {"random","simple","easy","intermediate","expert"};
+  public static String [] hints = {"do not show","show currently conflicting","show conflicting with solution"};
   public static JComboBox <String> difficultySetting = new JComboBox <> (difficulty);
+  public static JComboBox <String> hintBox = new JComboBox <> (hints);
   public static long timestamp=System.currentTimeMillis()-timeKeeper;
   
   //creates timer (must be global to prevent speed issues)
@@ -144,8 +147,10 @@ public class MethodsGUI {
     leaderboardLabel.setBounds(0,0,600,600);
     back2.setBounds(30,50,140,30);
     check.setBounds(40,90,120,30);
-    difficultySetting.setBounds(290,200,200,50);
-    setting.setBounds(90,200,190,50);
+    difficultySetting.setBounds(290,100,200,50);
+    setting.setBounds(90,100,190,50);
+    hintBox.setBounds(290,200,200,50);
+    hintSetting.setBounds(90,200,190,50);
     currentMode.setBounds(0,120,200,40);
     
     //initialize the JTextFields and add them to the panel
@@ -182,6 +187,8 @@ public class MethodsGUI {
     panel4.add(helpLabel);
     panel4.add(leaderboardLabel);
     panel4.add(difficultySetting);
+    panel4.add(hintBox);
+    panel4.add(hintSetting);
     panel4.add(setting);
     frame1.add(panel4);
     frame2.add(panel3);
@@ -202,6 +209,8 @@ public class MethodsGUI {
     leaderboardLabel.setVisible(false);
     difficultySetting.setVisible(false);
     setting.setVisible(false);
+    hintSetting.setVisible(false);
+    hintBox.setVisible(false);
     frame2.setVisible(false);
     panel4.setVisible(false);
     panel2.setVisible(false);
@@ -331,6 +340,8 @@ public class MethodsGUI {
     back.setVisible(true);
     difficultySetting.setVisible(true);
     setting.setVisible(true);
+    hintSetting.setVisible(true);
+    hintBox.setVisible(true);
     panel4.setVisible(true);
     frame1.add(panel4);
   }//end of help method
