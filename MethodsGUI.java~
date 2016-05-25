@@ -224,6 +224,7 @@ public class MethodsGUI {
     frame2.add(panel3);
     frame1.add(panel1);
     frame1.addKeyListener(new MainClass.undo ());
+    panel3.addKeyListener(new MainClass.undo ());
     frame1.setVisible(true);
     mainScreen();//runs next method
     

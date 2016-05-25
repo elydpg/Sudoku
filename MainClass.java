@@ -16,7 +16,7 @@ public class MainClass {
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
     public void run() {
      MethodsGUI.fileData=new JSONObject();
-     MethodsGUI.fileData.put("moves",MethodsGUI.arrOut(MethodsGUI.moves));
+     MethodsGUI.fileData.put("moves",MethodsGUI.moves);
      MethodsGUI.fileData.put("solvedGame",MethodsGUI.solvedGame.toString());
      MethodsGUI.fileData.put("game",MethodsGUI.game.toString());
      MethodsGUI.fileData.put("originalGame",MethodsGUI.originalGame.toString());
