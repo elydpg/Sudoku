@@ -90,13 +90,31 @@ public class MainClass {
     }//end of focus lost
   }//end of locate
   
+  static class undo implements KeyListener {
+    public void keyTyped (KeyEvent e) {
+      if(e.getKeyChar()=='Z'){
+        System.out.println("undo!");
+        MethodsGUI.frame1.requestFocusInWindow();
+      }
+    }
+    public void keyPressed (KeyEvent e) {}//must be here to run
+    public void keyReleased (KeyEvent e) {}//must be here to run
+  }
+  
   //find out which key is typed in JTextArea and if not 1-9 does not display it. Number will turn red if there is a conflicting number in same sub-grid, row, or column
   static class key implements KeyListener {
     public void keyTyped (KeyEvent e) {
       if((""+e.getKeyChar()).matches("[1-9\\ ]")||e.getKeyChar()==8){
       if(e.getKeyChar()==8){MethodsGUI.arrayFields[MethodsGUI.selectedField].setText(" ");}
       else{MethodsGUI.arrayFields[MethodsGUI.selectedField].setText("");}
-      MethodsGUI.game.setTile(MethodsGUI.selectedField,(byte)(e.getKeyChar()==' '||e.getKeyChar()==8?-1:Character.getNumericValue(e.getKeyChar())-1));
+      byte tileBeingSet=MethodsGUI.game.getTile(MethodsGUI.selectedField);
+      byte tileToSet=(byte)(e.getKeyChar()==' '||e.getKeyChar()==8?-1:Character.getNumericValue(e.getKeyChar())-1);
+      MethodsGUI.game.setTile(MethodsGUI.selectedField,tileToSet);
+      MethodsGUI.moves=Arrays.copyOf(MethodsGUI.moves,MethodsGUI.moves.length+1);
+      MethodsGUI.moves[MethodsGUI.moves.length-1]=MethodsGUI.recordMove(MethodsGUI.selectedField,tileBeingSet,tileToSet);
+      if(MethodsGUI.moves.length>1&&MethodsGUI.areSymmetricMoves(MethodsGUI.moves[MethodsGUI.moves.length-1],MethodsGUI.moves[MethodsGUI.moves.length-2])){MethodsGUI.moves=Arrays.copyOf(MethodsGUI.moves,MethodsGUI.moves.length-2);}
+      //System.out.println(Integer.toString(MethodsGUI.moves[MethodsGUI.moves.length-1],2));
+      System.out.println(MethodsGUI.getInit(0x4000ff02));
       MethodsGUI.checkInvalidTiles();
       MethodsGUI.frame1.requestFocusInWindow();
       }//end of if

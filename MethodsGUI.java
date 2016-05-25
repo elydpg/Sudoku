@@ -25,6 +25,7 @@ public class MethodsGUI {
   public static Sudoku originalGame = Sudoku.constructFromString(fileData.getString("originalGame"));
   public static Sudoku game = Sudoku.constructFromString(fileData.getString("game"));
   public static Sudoku solvedGame = Sudoku.constructFromString(fileData.getString("solvedGame"));
+  public static int[] moves=new int[0];
   
   //graphical fields
   public static JFrame frame1 = new JFrame("Sudoku"); 
@@ -167,7 +168,9 @@ public class MethodsGUI {
     //initialize the JTextFields and add them to the panel
     for(int i=0;i<arrayFields.length;i++){
       arrayFields[i] = new JTextField(" ");
+      arrayFields[i].addKeyListener(new MainClass.undo ());
       arrayFields[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(10,10,10,10)));
+      
     }//end of for loop
     addGameToPanel();
     
@@ -204,6 +207,7 @@ public class MethodsGUI {
     frame1.add(panel4);
     frame2.add(panel3);
     frame1.add(panel1);
+    frame1.addKeyListener(new MainClass.undo ());
     frame1.setVisible(true);
     mainScreen();//runs next method
     
@@ -358,12 +362,35 @@ public class MethodsGUI {
     frame1.add(panel4);
   }//end of help method
   
+  public static int recordMove(int pos,byte init,byte fin){
+    int newinit=0xFF&init;
+    int newfin=0xFF&fin;
+    return 0x40000000|(Math.min(0x3FFF,pos)<<16)|(newinit<<8)|newfin;
+  }
+  
+  public static int getPos(int move){
+    return ((move<<2)>>>2)>>>16;
+  }
+  
+  public static byte getInit(int move){
+    return (byte)(0xFF&((move<<2)>>>2)>>>8);
+  }
+  
+  public static byte getFin(int move){
+    return (byte)(0xFF&((move<<2)>>>2));
+  }
+  
+  public static boolean areSymmetricMoves(int move1,int move2){
+    return (getPos(move1)==getPos(move2))&&(getInit(move1)==getFin(move2))&&(getInit(move2)==getFin(move1));
+  }
+  
   public static void gameOver () {
     timey.stop();
     gameOver = true;
     String name = JOptionPane.showInputDialog("Congrats on winning!! Please enter your name");
     String diff = difficulty[difficultyIndex];
     String timeTaken = formatTime(timeKeeper);
+    String internalTime=""+timeKeeper;
     mainScreen();
   }//end of game over method
   

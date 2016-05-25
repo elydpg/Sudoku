@@ -50,7 +50,7 @@ public class MethodsGUI {
   public static JLabel gifLabel = new JLabel (gif);
   public static JLabel title = new JLabel ("Sudoku");
   public static JLabel currentMode = new JLabel ("Difficulty: ", SwingConstants.CENTER);
-  public static JLabel time = new JLabel("Time: " + (timeKeeper/1000l), SwingConstants.CENTER);
+  public static JLabel time = new JLabel("Time: " + formatTime(timeKeeper), SwingConstants.CENTER);
   public static JLabel other = new JLabel ("<html><center>This game was developed by Ely Golden, Zachary Minuk, and Ethan Orlander under " +
                                            "the supervision of Mark Rottmann at Tanenbaum CHAT Wallenberg Campus. All rights reserved. \u00a9");
   public static JLabel helpLabel = new JLabel("<html><center>The Classic Sudoku is a number placing puzzle based on a 9x9 grid with several " + 
@@ -81,11 +81,20 @@ public class MethodsGUI {
   public static JComboBox <String> hintBox = new JComboBox <> (hints);
   public static long timestamp=System.currentTimeMillis()-timeKeeper;
   
+  public static String formatTime(long time){
+    String seconds=""+(time/1000l)%60;
+    String minutes=""+(time/60000l)%60;
+    String hours=""+(time/3600000l);
+    if(seconds.length()==1){seconds="0"+seconds;}
+    if(minutes.length()==1){minutes="0"+minutes;}
+    return hours+":"+minutes+":"+seconds;
+  }
+  
   //creates timer (must be global to prevent speed issues)
   public static Timer timey = new Timer (50, new ActionListener() {
     public void actionPerformed (ActionEvent e) {  
       timeKeeper=System.currentTimeMillis()-timestamp;
-      time.setText("Time: " + (timeKeeper/1000l));//updates JLabel
+      time.setText("Time: " + formatTime(timeKeeper));//updates JLabel
     }});//end of timer
   
   public static void intro () {
@@ -252,7 +261,7 @@ public class MethodsGUI {
     frame1.setLocation(((width-810)/2), ((height-650)/2));
     frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);
     timeKeeper = 0;//resets timer incase it is not the first game being played
-    time.setText("Time: 0");//updates timer JLabel
+    time.setText("Time: 0:00:00");//updates timer JLabel
     timestamp=System.currentTimeMillis();
     timey.start();//starts the clock
     frame1.add(panel2);
@@ -353,6 +362,8 @@ public class MethodsGUI {
     timey.stop();
     gameOver = true;
     String name = JOptionPane.showInputDialog("Congrats on winning!! Please enter your name");
+    String diff = difficulty[difficultyIndex];
+    String timeTaken = formatTime(timeKeeper);
     mainScreen();
   }//end of game over method
   
