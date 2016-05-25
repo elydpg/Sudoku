@@ -14,6 +14,22 @@ import ReadWrite.FileIO;
 import SudokuClass.Sudoku;
 
 public class MethodsGUI {
+  public static Integer[] arrOut(int[] n){
+    Integer[] a=new Integer[n.length];
+    for(int c=0;c<a.length;c++){
+      a[c]=new Integer(n[c]);
+    }
+    return a;
+  }
+  
+  public static int[] arrIn(JSONArray n){
+    int[] a=new int[n.length()];
+    for(int c=0;c<a.length;c++){
+      a[c]=n.getInt(c);
+    }
+    return a;
+  }
+  
   //fields that need to be loaded from file
     //method required to deal with uncaught exception in global declaration
   public static JSONObject getFileData(){try{return new JSONObject(new String(FileIO.readBinary(new RandomAccessFile("gamestate.json","rw")),"UTF-8"));}catch(Exception e){return new JSONObject();}}
@@ -25,7 +41,7 @@ public class MethodsGUI {
   public static Sudoku originalGame = Sudoku.constructFromString(fileData.getString("originalGame"));
   public static Sudoku game = Sudoku.constructFromString(fileData.getString("game"));
   public static Sudoku solvedGame = Sudoku.constructFromString(fileData.getString("solvedGame"));
-  public static int[] moves=new int[0];
+  public static int[] moves=arrIn(fileData.getJSONArray("moves"));
   
   //graphical fields
   public static JFrame frame1 = new JFrame("Sudoku"); 
@@ -208,6 +224,7 @@ public class MethodsGUI {
     frame2.add(panel3);
     frame1.add(panel1);
     frame1.addKeyListener(new MainClass.undo ());
+    panel3.addKeyListener(new MainClass.undo ());
     frame1.setVisible(true);
     mainScreen();//runs next method
     
@@ -254,6 +271,7 @@ public class MethodsGUI {
   public static void gridDisplay () {
     gameOver = false;
     difficultyIndex = difficultySetting.getSelectedIndex();
+    moves=new int[0];
     try{
       originalGame = Sudoku.generateFromApi(difficultyIndex==0?difficulty[((int)Math.random()*4)+1]:difficulty[difficultyIndex]);
     }catch(Exception e){System.err.println(e);}
@@ -378,10 +396,6 @@ public class MethodsGUI {
   
   public static byte getFin(int move){
     return (byte)(0xFF&((move<<2)>>>2));
-  }
-  
-  public static boolean areSymmetricMoves(int move1,int move2){
-    return (getPos(move1)==getPos(move2))&&(getInit(move1)==getFin(move2))&&(getInit(move2)==getFin(move1));
   }
   
   public static void gameOver () {

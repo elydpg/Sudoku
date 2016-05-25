@@ -16,6 +16,7 @@ public class MainClass {
     Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
     public void run() {
      MethodsGUI.fileData=new JSONObject();
+     MethodsGUI.fileData.put("moves",MethodsGUI.arrOut(MethodsGUI.moves));
      MethodsGUI.fileData.put("solvedGame",MethodsGUI.solvedGame.toString());
      MethodsGUI.fileData.put("game",MethodsGUI.game.toString());
      MethodsGUI.fileData.put("originalGame",MethodsGUI.originalGame.toString());
@@ -92,8 +93,13 @@ public class MainClass {
   
   static class undo implements KeyListener {
     public void keyTyped (KeyEvent e) {
-      if(e.getKeyChar()=='Z'){
-        System.out.println("undo!");
+      if(e.getKeyChar()=='Z'&&MethodsGUI.moves.length>0){
+        byte undoTile=MethodsGUI.getInit(MethodsGUI.moves[MethodsGUI.moves.length-1]);
+        int undoPos=MethodsGUI.getPos(MethodsGUI.moves[MethodsGUI.moves.length-1]);
+        MethodsGUI.game.setTile(undoPos,undoTile);
+        MethodsGUI.arrayFields[undoPos].setText(undoTile==-1?" ":""+(undoTile+1));
+        MethodsGUI.moves=Arrays.copyOf(MethodsGUI.moves,MethodsGUI.moves.length-1);
+        MethodsGUI.checkInvalidTiles();
         MethodsGUI.frame1.requestFocusInWindow();
       }
     }
@@ -112,9 +118,6 @@ public class MainClass {
       MethodsGUI.game.setTile(MethodsGUI.selectedField,tileToSet);
       MethodsGUI.moves=Arrays.copyOf(MethodsGUI.moves,MethodsGUI.moves.length+1);
       MethodsGUI.moves[MethodsGUI.moves.length-1]=MethodsGUI.recordMove(MethodsGUI.selectedField,tileBeingSet,tileToSet);
-      if(MethodsGUI.moves.length>1&&MethodsGUI.areSymmetricMoves(MethodsGUI.moves[MethodsGUI.moves.length-1],MethodsGUI.moves[MethodsGUI.moves.length-2])){MethodsGUI.moves=Arrays.copyOf(MethodsGUI.moves,MethodsGUI.moves.length-2);}
-      //System.out.println(Integer.toString(MethodsGUI.moves[MethodsGUI.moves.length-1],2));
-      System.out.println(MethodsGUI.getInit(0x4000ff02));
       MethodsGUI.checkInvalidTiles();
       MethodsGUI.frame1.requestFocusInWindow();
       }//end of if
