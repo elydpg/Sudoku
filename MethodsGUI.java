@@ -1,7 +1,7 @@
 //Author: Zachary Minuk
 //Purpose: contains all methods relevent to the GUI of Sudoku program
 //Date created: March 26, 2016
-//Date modified: April 26, 2016
+//Date modified: May 25, 2016
 
 import java.io.*;
 import java.util.Arrays;
@@ -14,8 +14,7 @@ import ReadWrite.FileIO;
 import SudokuClass.Sudoku;
 
 public class MethodsGUI {
-  //fields that need to be loaded from file
-    //method required to deal with uncaught exception in global declaration
+  //fields that need to be loaded from file, method required to deal with uncaught exception in global declaration
   public static JSONObject getFileData(){try{return new JSONObject(new String(FileIO.readBinary(new RandomAccessFile("gamestate.json","rw")),"UTF-8"));}catch(Exception e){return new JSONObject();}}
   public static JSONObject fileData= getFileData();
   public static int difficultyIndex = fileData.getInt("difficultyIndex");
@@ -63,8 +62,12 @@ public class MethodsGUI {
                                               "generates a sudoku for you and times you in seconds to complete it. Your time is then saved and can " + 
                                               "be viewed from our leaderboards. So go, play, have fun! Try your best to set a new high score!! <br><br>" + 
                                               "In the options menu you can chose from a range of difficulties to challenge yourself with. "+ 
-                                              "<br><br>As you place numbers 1-9 in the sudoku board, you will get live feedback about whether that " + 
-                                              "number interferes with another in the same row/column/sub-grid. If it does interfere, it will turn red." + 
+                                              "<br><br> If in options you set Invalid Tiles to 'do not show' you will get no feedback on whether your numbers " +
+                                              "are correct or not. <br><br> If in options you set Invalid Tiles to 'show currently conflicting', you will get feeback " +
+                                              "about whether the number you input is valid in that current situation. For example, if there is a 5 in a certain row " +
+                                              "and you input a 5 at any point in that row, both numbers will turn red indicating that it is not possilbe.<br><br> " + 
+                                              "If in options you set Invalid Tiles to 'show conflicting with solution', every number you input will turn red if " +
+                                              "it should not be there." + 
                                               "<br><br>Once the game is correctly solved, you will automatically be redirected, there is no button to " + 
                                               " press when you think you have solved it.");
   public static JLabel leaderboardLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
@@ -83,6 +86,7 @@ public class MethodsGUI {
   public static JComboBox <String> hintBox = new JComboBox <> (hints);
   public static long timestamp=System.currentTimeMillis()-timeKeeper;
   
+  //makes time appear in hour:minute:seconds format
   public static String formatTime(long time){
     String seconds=""+(time/1000l)%60;
     String minutes=""+(time/60000l)%60;
@@ -90,7 +94,7 @@ public class MethodsGUI {
     if(seconds.length()==1){seconds="0"+seconds;}
     if(minutes.length()==1){minutes="0"+minutes;}
     return hours+":"+minutes+":"+seconds;
-  }
+  }//end of format time
   
   //creates timer (must be global to prevent speed issues)
   public static Timer timey = new Timer (50, new ActionListener() {
@@ -122,13 +126,6 @@ public class MethodsGUI {
     helpButton.setRolloverIcon(new ImageIcon("help hover.png"));
     leaderButton.setRolloverIcon(new ImageIcon("leaderboard hover.png"));
     optionButton.setRolloverIcon(new ImageIcon("option hover.png"));
-    
-    //borders of buttons invisible
-    playButton.setBorderPainted(false);
-    helpButton.setBorderPainted(false);
-    leaderButton.setBorderPainted(false);
-    optionButton.setBorderPainted(false);
-    resumeButton.setBorderPainted(false);
     
     //sets font of all JLabels
     title.setFont(new Font("American Typewriter", Font.PLAIN, 50));
@@ -166,14 +163,17 @@ public class MethodsGUI {
     hintSetting.setBounds(90,200,190,50);
     currentMode.setBounds(0,120,200,40);
     
-    //initialize the JTextFields and add them to the panel
+    //initialize the JTextFields with a black border and add them to the panel
     for(int i=0;i<arrayFields.length;i++){
       arrayFields[i] = new JTextField(" ");
       arrayFields[i].addKeyListener(new MainClass.undo ());
       arrayFields[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(10,10,10,10)));
-      
     }//end of for loop
     addGameToPanel();
+    
+    //sets settings for options to what they were
+    difficultySetting.setSelectedIndex(difficultyIndex);
+    hintBox.setSelectedIndex(invalidTilesIndex);
     
     //declares all action listeners
     playButton.addActionListener(new MainClass.play ()); 
@@ -184,6 +184,8 @@ public class MethodsGUI {
     back.addActionListener(new MainClass.back());
     back2.addActionListener(new MainClass.back());
     check.addActionListener(new MainClass.check());
+    frame1.addKeyListener(new MainClass.undo ());
+    panel3.addKeyListener(new MainClass.undo ());
     
     //everything needed is added to all panels and frames
     panel1.add(playButton);
@@ -208,19 +210,13 @@ public class MethodsGUI {
     frame1.add(panel4);
     frame2.add(panel3);
     frame1.add(panel1);
-    frame1.addKeyListener(new MainClass.undo ());
-    panel3.addKeyListener(new MainClass.undo ());
     frame1.setVisible(true);
     mainScreen();//runs next method
-    
-    //sets settings for options to what they were
-    difficultySetting.setSelectedIndex(difficultyIndex);
-    hintBox.setSelectedIndex(invalidTilesIndex);
   }//end of intro method
   
   public static void mainScreen () { 
-    timey.stop();//stops the clock
     //makes sure only stuff needed is visible (incase user has switched between pages)
+    timey.stop();//stops the clock
     frame1.setLocationRelativeTo(null);//centers main screen incase user has pressed back button from the play section 
     helpLabel.setVisible(false);
     back.setVisible(false);
@@ -236,27 +232,24 @@ public class MethodsGUI {
   }//end of main Screen method
   
   public static void gridReveal() {  
-    if(gameOver==false){
+    if(gameOver == false){
       checkInvalidTiles();
-      currentMode.setText("Difficulty: " + difficulty[difficultyIndex]);//updates JLabel in stat-window
-      //positions both frames in centre of screen (regardless of monitor's resolution)
       frame1.setLocation(((width-810)/2), ((height-650)/2));
       frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);
       panel1.setVisible(false);
-      timestamp=System.currentTimeMillis()-timeKeeper;
-      timey.start();//starts the clock
       frame1.add(panel2);
+      timey.start();//starts the clock
       frame2.setVisible(true);
       panel2.setVisible(true);
     } else {
-      dialog.setVisible(true);
+      dialog.setVisible(true);//displays error message
     }//end of if
   }//end of grid reveal method
   
   public static void gridDisplay () {
     gameOver = false;
     difficultyIndex = difficultySetting.getSelectedIndex();
-    moves=new int[0];
+    moves = new int[0];
     try{
       originalGame = Sudoku.generateFromApi(difficultyIndex==0?difficulty[((int)Math.random()*4)+1]:difficulty[difficultyIndex]);
     }catch(Exception e){System.err.println(e);}
@@ -279,18 +272,17 @@ public class MethodsGUI {
   }//end of grid display method
   
   public static void solutionDisplay () {
-    panel1.setVisible(false);
     gameOver = true;
     int[] tilesToFill=originalGame.unsolvedTilePositions();
     for (int i = 0; i < tilesToFill.length; i++) {
       arrayFields[tilesToFill[i]].setText(""+(solvedGame.getTile(tilesToFill[i])+1));
       arrayFields[tilesToFill[i]].setEditable(false);
       arrayFields[tilesToFill[i]].setForeground(new Color (0,0,0));
-    }//end of first for loop
+    }//end of for loop that fills in the answers
     tilesToFill=originalGame.solvedTilePositions();
     for (int i = 0; i < tilesToFill.length; i++) {
       arrayFields[tilesToFill[i]].setForeground(new Color (0,0,0));
-    }//end of second for loop
+    }//end of for loop
     frame1.add(panel2);
     timey.stop();
     panel2.setVisible(true);
@@ -329,14 +321,14 @@ public class MethodsGUI {
       }//end of if
       panel2.add(arrayFields[i]);                 
     }//end of for loop
-  }
+  }//end of add game to panel
   
   public static void checkInvalidTiles(){
-    for(int c=0;c<81;c++){
+    for(int c = 0; c < 81; c++){
         if(invalidTilesIndex>0&&(game.conflictingTilePositions(c).length!=0||(invalidTilesIndex==2&&game.getTile(c)!=solvedGame.getTile(c)))){arrayFields[c].setForeground(new Color (255,0,0));}
         else{arrayFields[c].setForeground(new Color (0,0,0));}
-      }
-  }
+      }//end of for loop
+  }//end of check invalid tiles
   
   public static void helpMethod () {
     panel1.setVisible(false);
@@ -369,19 +361,19 @@ public class MethodsGUI {
     int newinit=0xFF&init;
     int newfin=0xFF&fin;
     return 0x40000000|(Math.min(0x3FFF,pos)<<16)|(newinit<<8)|newfin;
-  }
+  }//end of record move
   
   public static int getPos(int move){
     return ((move<<2)>>>2)>>>16;
-  }
+  }//end of get pos
   
   public static byte getInit(int move){
     return (byte)(0xFF&((move<<2)>>>2)>>>8);
-  }
+  }//end of getInit
   
   public static byte getFin(int move){
     return (byte)(0xFF&((move<<2)>>>2));
-  }
+  }//end of getFin
   
   public static void gameOver () {
     timey.stop();
@@ -392,5 +384,4 @@ public class MethodsGUI {
     String internalTime=""+timeKeeper;
     mainScreen();
   }//end of game over method
-  
 }//end of class

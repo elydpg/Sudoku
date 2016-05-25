@@ -14,22 +14,6 @@ import ReadWrite.FileIO;
 import SudokuClass.Sudoku;
 
 public class MethodsGUI {
-  public static Integer[] arrOut(int[] n){
-    Integer[] a=new Integer[n.length];
-    for(int c=0;c<a.length;c++){
-      a[c]=new Integer(n[c]);
-    }
-    return a;
-  }
-  
-  public static int[] arrIn(JSONArray n){
-    int[] a=new int[n.length()];
-    for(int c=0;c<a.length;c++){
-      a[c]=n.getInt(c);
-    }
-    return a;
-  }
-  
   //fields that need to be loaded from file
     //method required to deal with uncaught exception in global declaration
   public static JSONObject getFileData(){try{return new JSONObject(new String(FileIO.readBinary(new RandomAccessFile("gamestate.json","rw")),"UTF-8"));}catch(Exception e){return new JSONObject();}}
@@ -41,7 +25,8 @@ public class MethodsGUI {
   public static Sudoku originalGame = Sudoku.constructFromString(fileData.getString("originalGame"));
   public static Sudoku game = Sudoku.constructFromString(fileData.getString("game"));
   public static Sudoku solvedGame = Sudoku.constructFromString(fileData.getString("solvedGame"));
-  public static int[] moves=arrIn(fileData.getJSONArray("moves"));
+  public static int[] jsonArrayToIntArray(JSONArray n){int[] a=new int[n.length()];for(int c=0;c<a.length;c++){a[c]=n.getInt(c);}return a;}
+  public static int[] moves=jsonArrayToIntArray(fileData.getJSONArray("moves"));
   
   //graphical fields
   public static JFrame frame1 = new JFrame("Sudoku"); 
