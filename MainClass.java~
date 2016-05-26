@@ -40,7 +40,7 @@ public class MainClass {
   static class resume implements ActionListener {
     public void actionPerformed (ActionEvent e) {
       MethodsGUI.gridReveal();
-    }}
+    }}//runs the grid reveal method when you press resume game button
   
   static class help implements ActionListener {
     public void actionPerformed (ActionEvent e) {
@@ -101,11 +101,11 @@ public class MainClass {
         MethodsGUI.moves=Arrays.copyOf(MethodsGUI.moves,MethodsGUI.moves.length-1);
         MethodsGUI.checkInvalidTiles();
         MethodsGUI.frame1.requestFocusInWindow();
-      }
-    }
+      }//end of if statement
+    }//end of key typed
     public void keyPressed (KeyEvent e) {}//must be here to run
     public void keyReleased (KeyEvent e) {}//must be here to run
-  }
+  }//end of undo key listener
   
   //find out which key is typed in JTextArea and if not 1-9 does not display it. Number will turn red if there is a conflicting number in same sub-grid, row, or column
   static class key implements KeyListener {
