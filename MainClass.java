@@ -34,6 +34,7 @@ public class MainClass {
   //Below are action listeners that run certain methods when certain buttons are pressed
   static class play implements ActionListener {
     public void actionPerformed (ActionEvent e) {
+      MethodsGUI.load.setText("Loading...");
       MethodsGUI.gridDisplay();
     }}//displays the sudoku board and info screen when play button is pressed
   

@@ -75,6 +75,7 @@ public class MethodsGUI {
   public static JLabel hintSetting = new JLabel ("Invalid Tiles:");
   public static JOptionPane option = new JOptionPane("<html><font face = 'American Typewriter'>There is no game to resume");
   public static JDialog dialog = option.createDialog(null);
+  public static JLabel load = new JLabel ("");
   
   //other fields
   public static JTextField [] arrayFields = new JTextField [81];
@@ -137,6 +138,7 @@ public class MethodsGUI {
     setting.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     hintSetting.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     currentMode.setFont(new Font("American Typewriter", Font.PLAIN, 15));
+    load.setFont(new Font("American Typewriter", Font.PLAIN, 18));
     
     //gets monitor resolution for window placement
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -151,6 +153,7 @@ public class MethodsGUI {
     optionButton.setBounds(350,422,200,85);
     gifLabel.setBounds(30,170,250,250);
     title.setBounds(80,50,250,50);
+    load.setBounds(130,100,250,50);
     other.setBounds(2,490,598,100);
     time.setBounds(0,10,200,23);
     helpLabel.setBounds(15,0,570,520);
@@ -206,6 +209,7 @@ public class MethodsGUI {
     panel4.add(leaderboardLabel);
     panel4.add(difficultySetting);
     panel4.add(hintBox);
+    panel1.add(load);
     panel4.add(hintSetting);
     panel4.add(setting);
     frame1.add(panel4);
@@ -258,6 +262,7 @@ public class MethodsGUI {
     try{
       originalGame = Sudoku.generateFromApi(difficultyIndex==0?difficulty[((int)Math.random()*4)+1]:difficulty[difficultyIndex]);
     }catch(Exception e){System.err.println(e);}
+    //load.setText("");
     game=Sudoku.copy(originalGame);
     solvedGame=Sudoku.generateSolved(game);
     currentMode.setText("Difficulty: " + difficulty[difficultyIndex]);//updates JLabel in stat-window

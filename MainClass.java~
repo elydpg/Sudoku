@@ -1,7 +1,7 @@
 //Author: Zachary Minuk, Ely Golden, Ethan Orlander
 //Purpose: The main class of sudoku game, runs methods from other classes
 //Date created: March 26, 2016
-//Date modified: May 25, 2016
+//Date modified: May 26, 2016
 import java.io.*;
 import java.awt.event.*;
 import java.awt.*;
