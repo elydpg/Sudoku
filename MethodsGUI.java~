@@ -85,6 +85,7 @@ public class MethodsGUI {
   public static JComboBox <String> difficultySetting = new JComboBox <> (difficulty);
   public static JComboBox <String> hintBox = new JComboBox <> (hints);
   public static long timestamp=System.currentTimeMillis()-timeKeeper;
+  public static boolean undoPossible=false;
   
   //makes time appear in hour:minute:seconds format
   public static String formatTime(long time){
@@ -166,7 +167,6 @@ public class MethodsGUI {
     //initialize the JTextFields with a black border and add them to the panel
     for(int i=0;i<arrayFields.length;i++){
       arrayFields[i] = new JTextField(" ");
-      arrayFields[i].addKeyListener(new MainClass.undo ());
       arrayFields[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(10,10,10,10)));
     }//end of for loop
     addGameToPanel();
@@ -185,7 +185,8 @@ public class MethodsGUI {
     back2.addActionListener(new MainClass.back());
     check.addActionListener(new MainClass.check());
     frame1.addKeyListener(new MainClass.undo ());
-    panel3.addKeyListener(new MainClass.undo ());
+    frame2.setFocusableWindowState(false);//this is a bodge; hoping to discuss in the near future
+    //frame2.addKeyListener(new MainClass.undo ());
     
     //everything needed is added to all panels and frames
     panel1.add(playButton);
@@ -214,9 +215,10 @@ public class MethodsGUI {
     mainScreen();//runs next method
   }//end of intro method
   
-  public static void mainScreen () { 
+  public static void mainScreen () {
     //makes sure only stuff needed is visible (incase user has switched between pages)
     timey.stop();//stops the clock
+    undoPossible=false;//makes undoing moves impossible (since no game is being played)
     frame1.setLocationRelativeTo(null);//centers main screen incase user has pressed back button from the play section 
     helpLabel.setVisible(false);
     back.setVisible(false);
@@ -231,9 +233,11 @@ public class MethodsGUI {
     panel1.setVisible(true);
   }//end of main Screen method
   
-  public static void gridReveal() {  
+  public static void gridReveal() {
+    undoPossible=true;
     if(gameOver == false){
       checkInvalidTiles();
+      currentMode.setText("Difficulty: " + difficulty[difficultyIndex]);//updates JLabel in stat-window
       frame1.setLocation(((width-810)/2), ((height-650)/2));
       frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);
       panel1.setVisible(false);
@@ -250,6 +254,7 @@ public class MethodsGUI {
     gameOver = false;
     difficultyIndex = difficultySetting.getSelectedIndex();
     moves = new int[0];
+    undoPossible=true;
     try{
       originalGame = Sudoku.generateFromApi(difficultyIndex==0?difficulty[((int)Math.random()*4)+1]:difficulty[difficultyIndex]);
     }catch(Exception e){System.err.println(e);}
@@ -273,6 +278,7 @@ public class MethodsGUI {
   
   public static void solutionDisplay () {
     gameOver = true;
+    undoPossible=false;
     int[] tilesToFill=originalGame.unsolvedTilePositions();
     for (int i = 0; i < tilesToFill.length; i++) {
       arrayFields[tilesToFill[i]].setText(""+(solvedGame.getTile(tilesToFill[i])+1));
@@ -302,7 +308,7 @@ public class MethodsGUI {
       }
       KeyListener[] k=arrayFields[i].getKeyListeners();
       for (int j = 0; j < k.length; j++) {
-        if(k[j].getClass()==MainClass.key.class){arrayFields[i].removeKeyListener(k[j]);}
+        if(k[j].getClass()==MainClass.key.class||k[j].getClass()==MainClass.undo.class){arrayFields[i].removeKeyListener(k[j]);}
       }
       arrayFields[i].setForeground(new Color (0,0,0));
       if (currentTile == -1) {
@@ -312,6 +318,7 @@ public class MethodsGUI {
         arrayFields[i].setFont(new Font("American Typewriter", Font.PLAIN, 20));
       } else {
         arrayFields[i].setText(""+(currentTile+1));
+        arrayFields[i].addKeyListener(new MainClass.undo ());
         arrayFields[i].setEditable(false);
         arrayFields[i].setFont(new Font("American Typewriter", Font.BOLD, 20));
       }//end of if

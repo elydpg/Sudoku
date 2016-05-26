@@ -63,11 +63,11 @@ public class MethodsGUI {
                                               "be viewed from our leaderboards. So go, play, have fun! Try your best to set a new high score!! <br><br>" + 
                                               "In the options menu you can chose from a range of difficulties to challenge yourself with. "+ 
                                               "<br><br> If in options you set Invalid Tiles to 'do not show' you will get no feedback on whether your numbers " +
-                                              "are correct or not. <br><br> If in options you set Invalid Tiles to 'show currently conflicting', you will get feeback " +
+                                              "are correct or not. <br><br> If in options you set Invalid Tiles to 'show currently conflicting', you will get feedback " +
                                               "about whether the number you input is valid in that current situation. For example, if there is a 5 in a certain row " +
                                               "and you input a 5 at any point in that row, both numbers will turn red indicating that it is not possilbe.<br><br> " + 
                                               "If in options you set Invalid Tiles to 'show conflicting with solution', every number you input will turn red if " +
-                                              "it should not be there." + 
+                                              "it should not be there.<br><br> Press shift + z to undo your previous moves. " + 
                                               "<br><br>Once the game is correctly solved, you will automatically be redirected, there is no button to " + 
                                               " press when you think you have solved it.");
   public static JLabel leaderboardLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
@@ -153,7 +153,7 @@ public class MethodsGUI {
     title.setBounds(80,50,250,50);
     other.setBounds(2,490,598,100);
     time.setBounds(0,10,200,23);
-    helpLabel.setBounds(15,15,570,500);
+    helpLabel.setBounds(15,0,570,520);
     back.setBounds(240,520,120,30);
     leaderboardLabel.setBounds(0,0,600,600);
     back2.setBounds(30,50,140,30);
