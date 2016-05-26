@@ -65,7 +65,7 @@ public class MethodsGUI {
                                               "<br><br> If in options you set Invalid Tiles to 'do not show' you will get no feedback on whether your numbers " +
                                               "are correct or not. <br><br> If in options you set Invalid Tiles to 'show currently conflicting', you will get feedback " +
                                               "about whether the number you input is valid in that current situation. For example, if there is a 5 in a certain row " +
-                                              "and you input a 5 at any point in that row, both numbers will turn red indicating that it is not possilbe.<br><br> " + 
+                                              "and you input a 5 at any point in that row, both numbers will turn red indicating that it is not valid.<br><br> " + 
                                               "If in options you set Invalid Tiles to 'show conflicting with solution', every number you input will turn red if " +
                                               "it should not be there.<br><br> Press shift + z to undo your previous moves. " + 
                                               "<br><br>Once the game is correctly solved, you will automatically be redirected, there is no button to " + 

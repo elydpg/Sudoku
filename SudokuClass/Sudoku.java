@@ -1,5 +1,11 @@
 package SudokuClass;
 
+//Author: Ely Golden
+//Purpose: The data type representing the Sudoku game. 
+//Used to control game mechanics, such as validation and solving, and to store the tiles.
+//Date created: March 26, 2016
+//Date modified: May 26, 2016
+
 import java.util.*;
 import java.io.*;
 
@@ -15,6 +21,7 @@ public class Sudoku{
   /** The largest possible size for a Sudoku board*/
   public static final int MAX_SIZE=11;
   
+  //the Sudoku's tiles.
   private byte[] tiles;
     
     private static byte[] stringArrayToByteArray(String[] arr){

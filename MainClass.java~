@@ -1,7 +1,7 @@
 //Author: Zachary Minuk, Ely Golden, Ethan Orlander
 //Purpose: The main class of sudoku game, runs methods from other classes
 //Date created: March 26, 2016
-//Date modified: May 19, 2016
+//Date modified: May 25, 2016
 import java.io.*;
 import java.awt.event.*;
 import java.awt.*;
@@ -93,14 +93,14 @@ public class MainClass {
   
   static class undo implements KeyListener {
     public void keyTyped (KeyEvent e) {
-      if(e.getKeyChar()=='Z'&&MethodsGUI.moves.length>0){
+      if(e.getKeyChar()=='Z'&&MethodsGUI.moves.length>0&&MethodsGUI.undoPossible){
+        MethodsGUI.frame1.requestFocusInWindow();
         byte undoTile=MethodsGUI.getInit(MethodsGUI.moves[MethodsGUI.moves.length-1]);
         int undoPos=MethodsGUI.getPos(MethodsGUI.moves[MethodsGUI.moves.length-1]);
         MethodsGUI.game.setTile(undoPos,undoTile);
         MethodsGUI.arrayFields[undoPos].setText(undoTile==-1?" ":""+(undoTile+1));
         MethodsGUI.moves=Arrays.copyOf(MethodsGUI.moves,MethodsGUI.moves.length-1);
         MethodsGUI.checkInvalidTiles();
-        MethodsGUI.frame1.requestFocusInWindow();
       }//end of if statement
     }//end of key typed
     public void keyPressed (KeyEvent e) {}//must be here to run
@@ -116,8 +116,11 @@ public class MainClass {
       byte tileBeingSet=MethodsGUI.game.getTile(MethodsGUI.selectedField);
       byte tileToSet=(byte)(e.getKeyChar()==' '||e.getKeyChar()==8?-1:Character.getNumericValue(e.getKeyChar())-1);
       MethodsGUI.game.setTile(MethodsGUI.selectedField,tileToSet);
+      int moveToRecord=MethodsGUI.recordMove(MethodsGUI.selectedField,tileBeingSet,tileToSet);
+      if(MethodsGUI.getInit(moveToRecord)!=MethodsGUI.getFin(moveToRecord)){
       MethodsGUI.moves=Arrays.copyOf(MethodsGUI.moves,MethodsGUI.moves.length+1);
-      MethodsGUI.moves[MethodsGUI.moves.length-1]=MethodsGUI.recordMove(MethodsGUI.selectedField,tileBeingSet,tileToSet);
+      MethodsGUI.moves[MethodsGUI.moves.length-1]=moveToRecord;
+      }//only records moves where the value of the tile actually changes
       MethodsGUI.checkInvalidTiles();
       MethodsGUI.frame1.requestFocusInWindow();
       }//end of if
