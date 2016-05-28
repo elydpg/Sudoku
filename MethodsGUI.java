@@ -18,6 +18,7 @@ public class MethodsGUI {
   public static JSONObject getFileData(){try{return new JSONObject(new String(FileIO.readBinary(new RandomAccessFile("gamestate.json","rw")),"UTF-8"));}catch(Exception e){return new JSONObject();}}
   public static JSONObject fileData= getFileData();
   public static int difficultyIndex = fileData.getInt("difficultyIndex");
+  public static int actualDifficulty = fileData.getInt("actualDifficulty");
   public static int invalidTilesIndex = fileData.getInt("invalidTilesIndex");;
   public static long timeKeeper = fileData.getLong("timeKeeper");
   public static boolean gameOver = fileData.getBoolean("gameOver");
@@ -267,10 +268,11 @@ public class MethodsGUI {
     loadingTimer.stop();
     gameOver = false;
     difficultyIndex = difficultySetting.getSelectedIndex();
+    actualDifficulty = difficultyIndex==0?((int)(Math.random()*4))+1:difficultyIndex;
     moves = new int[0];
     undoPossible=true;
     try{
-      originalGame = Sudoku.generateFromApi(difficultyIndex==0?difficulty[((int)Math.random()*4)+1]:difficulty[difficultyIndex]);
+      originalGame = Sudoku.generateFromApi(difficulty[actualDifficulty]);
     }catch(Exception e){System.err.println(e);}
     game=Sudoku.copy(originalGame);
     solvedGame=Sudoku.generateSolved(game);
@@ -401,10 +403,14 @@ public class MethodsGUI {
   public static void gameOver () {
     timey.stop();
     gameOver = true;
-    String name = JOptionPane.showInputDialog("Congrats on winning!! Please enter your name");
-    String diff = difficulty[difficultyIndex];
+    String name = JOptionPane.showInputDialog("Congrats on solving a"+(actualDifficulty==1?" ":"n ")+difficulty[actualDifficulty]+" Sudoku! Please enter your name");
+    String diff = difficulty[actualDifficulty];
+    int internalDiff=5-actualDifficulty;
     String timeTaken = formatTime(timeKeeper);
-    String internalTime=""+timeKeeper;
+    long internalTime=timeKeeper;
+    if(name!=null){
+      //code for adding values to the leaderboard
+    }
     mainScreen();
   }//end of game over method
 }//end of class

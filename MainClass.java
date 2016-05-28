@@ -23,6 +23,7 @@ public class MainClass {
      MethodsGUI.fileData.put("gameOver",MethodsGUI.gameOver);
      MethodsGUI.fileData.put("timeKeeper",MethodsGUI.timeKeeper);
      MethodsGUI.fileData.put("invalidTilesIndex",MethodsGUI.invalidTilesIndex);
+     MethodsGUI.fileData.put("actualDifficulty",MethodsGUI.actualDifficulty);
      MethodsGUI.fileData.put("difficultyIndex",MethodsGUI.difficultyIndex);
      try{
      FileIO.writeBinary(MethodsGUI.fileData.toString().getBytes("UTF-8"),new RandomAccessFile("gamestate.json","rw"));

@@ -1,7 +1,7 @@
 //Author: Zachary Minuk
 //Purpose: contains all methods relevent to the GUI of Sudoku program
 //Date created: March 26, 2016
-//Date modified: May 26, 2016
+//Date modified: May 28, 2016
 
 import java.io.*;
 import java.util.Arrays;
@@ -9,7 +9,6 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import javax.swing.border.*;
-import java.beans.*;
 import org.json.*;
 import ReadWrite.FileIO;
 import SudokuClass.Sudoku;
