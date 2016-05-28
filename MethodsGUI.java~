@@ -9,6 +9,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import javax.swing.border.*;
+import java.beans.*;
 import org.json.*;
 import ReadWrite.FileIO;
 import SudokuClass.Sudoku;
@@ -75,6 +76,7 @@ public class MethodsGUI {
   public static JLabel hintSetting = new JLabel ("Invalid Tiles:");
   public static JOptionPane option = new JOptionPane("<html><font face = 'American Typewriter'>There is no game to resume");
   public static JDialog dialog = option.createDialog(null);
+  public static JLabel load = new JLabel ("");
   
   //other fields
   public static JTextField [] arrayFields = new JTextField [81];
@@ -102,6 +104,14 @@ public class MethodsGUI {
     public void actionPerformed (ActionEvent e) {  
       timeKeeper=System.currentTimeMillis()-timestamp;
       time.setText("Time: " + formatTime(timeKeeper));//updates JLabel
+    }});//end of timer
+  
+  //creates timer (must be global to prevent speed issues)
+  public static Timer loadingTimer = new Timer (50, new ActionListener() {
+    public void actionPerformed (ActionEvent e) {
+      if(playButton.isEnabled()==false){
+      gridDisplay();
+      }
     }});//end of timer
   
   public static void intro () {
@@ -137,6 +147,7 @@ public class MethodsGUI {
     setting.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     hintSetting.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     currentMode.setFont(new Font("American Typewriter", Font.PLAIN, 15));
+    load.setFont(new Font("American Typewriter", Font.PLAIN, 18));
     
     //gets monitor resolution for window placement
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -151,6 +162,7 @@ public class MethodsGUI {
     optionButton.setBounds(350,422,200,85);
     gifLabel.setBounds(30,170,250,250);
     title.setBounds(80,50,250,50);
+    load.setBounds(130,100,250,50);
     other.setBounds(2,490,598,100);
     time.setBounds(0,10,200,23);
     helpLabel.setBounds(15,0,570,520);
@@ -206,6 +218,7 @@ public class MethodsGUI {
     panel4.add(leaderboardLabel);
     panel4.add(difficultySetting);
     panel4.add(hintBox);
+    panel1.add(load);
     panel4.add(hintSetting);
     panel4.add(setting);
     frame1.add(panel4);
@@ -218,6 +231,7 @@ public class MethodsGUI {
   public static void mainScreen () {
     //makes sure only stuff needed is visible (incase user has switched between pages)
     timey.stop();//stops the clock
+    loadingTimer.start();
     undoPossible=false;//makes undoing moves impossible (since no game is being played)
     frame1.setLocationRelativeTo(null);//centers main screen incase user has pressed back button from the play section 
     helpLabel.setVisible(false);
@@ -251,6 +265,7 @@ public class MethodsGUI {
   }//end of grid reveal method
   
   public static void gridDisplay () {
+    loadingTimer.stop();
     gameOver = false;
     difficultyIndex = difficultySetting.getSelectedIndex();
     moves = new int[0];
@@ -262,6 +277,8 @@ public class MethodsGUI {
     solvedGame=Sudoku.generateSolved(game);
     currentMode.setText("Difficulty: " + difficulty[difficultyIndex]);//updates JLabel in stat-window
     addGameToPanel();
+    playButton.setEnabled(true);
+    load.setText("");
     //positions both frames in centre of screen (regardless of monitor's resolution)
     frame1.setLocation(((width-810)/2), ((height-650)/2));
     frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);

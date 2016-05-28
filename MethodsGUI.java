@@ -1,7 +1,7 @@
 //Author: Zachary Minuk
 //Purpose: contains all methods relevent to the GUI of Sudoku program
 //Date created: March 26, 2016
-//Date modified: May 26, 2016
+//Date modified: May 28, 2016
 
 import java.io.*;
 import java.util.Arrays;
@@ -103,6 +103,14 @@ public class MethodsGUI {
     public void actionPerformed (ActionEvent e) {  
       timeKeeper=System.currentTimeMillis()-timestamp;
       time.setText("Time: " + formatTime(timeKeeper));//updates JLabel
+    }});//end of timer
+  
+  //creates timer (must be global to prevent speed issues)
+  public static Timer loadingTimer = new Timer (50, new ActionListener() {
+    public void actionPerformed (ActionEvent e) {
+      if(playButton.isEnabled()==false){
+      gridDisplay();
+      }
     }});//end of timer
   
   public static void intro () {
@@ -222,6 +230,7 @@ public class MethodsGUI {
   public static void mainScreen () {
     //makes sure only stuff needed is visible (incase user has switched between pages)
     timey.stop();//stops the clock
+    loadingTimer.start();
     undoPossible=false;//makes undoing moves impossible (since no game is being played)
     frame1.setLocationRelativeTo(null);//centers main screen incase user has pressed back button from the play section 
     helpLabel.setVisible(false);
@@ -255,6 +264,7 @@ public class MethodsGUI {
   }//end of grid reveal method
   
   public static void gridDisplay () {
+    loadingTimer.stop();
     gameOver = false;
     difficultyIndex = difficultySetting.getSelectedIndex();
     moves = new int[0];
@@ -262,11 +272,12 @@ public class MethodsGUI {
     try{
       originalGame = Sudoku.generateFromApi(difficultyIndex==0?difficulty[((int)Math.random()*4)+1]:difficulty[difficultyIndex]);
     }catch(Exception e){System.err.println(e);}
-    //load.setText("");
     game=Sudoku.copy(originalGame);
     solvedGame=Sudoku.generateSolved(game);
     currentMode.setText("Difficulty: " + difficulty[difficultyIndex]);//updates JLabel in stat-window
     addGameToPanel();
+    playButton.setEnabled(true);
+    load.setText("");
     //positions both frames in centre of screen (regardless of monitor's resolution)
     frame1.setLocation(((width-810)/2), ((height-650)/2));
     frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);

@@ -1,7 +1,7 @@
 //Author: Zachary Minuk, Ely Golden, Ethan Orlander
 //Purpose: The main class of sudoku game, runs methods from other classes
 //Date created: March 26, 2016
-//Date modified: May 26, 2016
+//Date modified: May 28, 2016
 import java.io.*;
 import java.awt.event.*;
 import java.awt.*;
@@ -35,7 +35,7 @@ public class MainClass {
   static class play implements ActionListener {
     public void actionPerformed (ActionEvent e) {
       MethodsGUI.load.setText("Loading...");
-      MethodsGUI.gridDisplay();
+      MethodsGUI.playButton.setEnabled(false);
     }}//displays the sudoku board and info screen when play button is pressed
   
   static class resume implements ActionListener {
