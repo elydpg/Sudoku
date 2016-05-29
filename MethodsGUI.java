@@ -89,11 +89,11 @@ public class MethodsGUI {
   public static long timestamp=System.currentTimeMillis()-timeKeeper;
   public static boolean undoPossible=false;
   
-  //makes time appear in hour:minute:seconds format
+  //makes time appear in hours:minutes:seconds format
   public static String formatTime(long time){
-    String seconds=""+(time/1000l)%60;
-    String minutes=""+(time/60000l)%60;
-    String hours=""+(time/3600000l);
+    String seconds=""+Math.floorMod(Math.floorDiv(time,1000l),60);
+    String minutes=""+Math.floorMod(Math.floorDiv(time,60000l),60);
+    String hours=""+Math.floorDiv(time,3600000l);
     if(seconds.length()==1){seconds="0"+seconds;}
     if(minutes.length()==1){minutes="0"+minutes;}
     return hours+":"+minutes+":"+seconds;
@@ -197,6 +197,7 @@ public class MethodsGUI {
     back2.addActionListener(new MainClass.back());
     check.addActionListener(new MainClass.check());
     frame1.addKeyListener(new MainClass.undo ());
+    frame1.addWindowFocusListener(new MainClass.pause ());
     frame2.setFocusableWindowState(false);//this is a bodge; hoping to discuss in the near future
     //frame2.addKeyListener(new MainClass.undo ());
     
@@ -256,7 +257,9 @@ public class MethodsGUI {
       frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);
       panel1.setVisible(false);
       frame1.add(panel2);
+      timestamp=System.currentTimeMillis()-timeKeeper;
       timey.start();//starts the clock
+      loadingTimer.stop();
       frame2.setVisible(true);
       panel2.setVisible(true);
     } else {
@@ -309,6 +312,7 @@ public class MethodsGUI {
     }//end of for loop
     frame1.add(panel2);
     timey.stop();
+    currentMode.setText("Difficulty: " + difficulty[actualDifficulty]);
     panel2.setVisible(true);
     check.setEnabled(false);
   }//end of show solution method
@@ -403,6 +407,7 @@ public class MethodsGUI {
   public static void gameOver () {
     timey.stop();
     gameOver = true;
+    currentMode.setText("Difficulty: " + difficulty[actualDifficulty]);
     String name = JOptionPane.showInputDialog("Congrats on solving a"+(actualDifficulty==1?" ":"n ")+difficulty[actualDifficulty]+" Sudoku! Please enter your name");
     String diff = difficulty[actualDifficulty];
     int internalDiff=5-actualDifficulty;

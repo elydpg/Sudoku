@@ -70,6 +70,11 @@ public class MainClass {
       MethodsGUI.solutionDisplay();
     }}//runs the solution display method when you press show solution button
   
+  static class pause implements WindowFocusListener{
+    public void windowGainedFocus (WindowEvent e) {}
+    public void windowLostFocus (WindowEvent e) {MethodsGUI.mainScreen();}
+  }//runs the main screen method when the window loses focus
+  
   //determines when a JTextArea is pressed and unpressed and determines which of the 81 it is
   static class locate implements FocusListener{
     public void focusGained (FocusEvent e) {
@@ -80,8 +85,8 @@ public class MainClass {
           if(MethodsGUI.arrayFields[MethodsGUI.selectedField]==theField){break;}
           MethodsGUI.selectedField++;
         }//end of if
-        MethodsGUI.arrayFields[MethodsGUI.selectedField].selectAll();
         MethodsGUI.backupText=MethodsGUI.arrayFields[MethodsGUI.selectedField].getText().replaceAll("[\u200b]","");//replaces with a zero width space
+        MethodsGUI.arrayFields[MethodsGUI.selectedField].selectAll();
       }//end of if
     }//end of focus gained
     public void focusLost (FocusEvent e) {
