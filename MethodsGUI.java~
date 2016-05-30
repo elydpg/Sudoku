@@ -122,6 +122,7 @@ public class MethodsGUI {
     frame1.setResizable(false);
     frame2.setSize(200,180);
     frame2.setResizable(false);
+    frame2.setDefaultCloseOperation(0);//cannot close window
     
     //panels are set up
     panel1.setLayout(null);//main screen
