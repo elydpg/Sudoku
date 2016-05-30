@@ -30,7 +30,7 @@ public class MethodsGUI {
   
   //graphical fields
   public static JFrame frame1 = new JFrame("Sudoku"); 
-  public static JFrame frame2 = new JFrame("Info");
+  public static Dlg frame2 = new Dlg(new JFrame(),"Info");
   public static JPanel panel1 = new JPanel();
   public static JPanel panel2 = new JPanel (new GridLayout(9,9,-2,-2));
   public static JPanel panel3 = new JPanel();
@@ -122,7 +122,7 @@ public class MethodsGUI {
     frame1.setResizable(false);
     frame2.setSize(200,180);
     frame2.setResizable(false);
-    frame2.setDefaultCloseOperation(0);//cannot close window
+    frame2.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);//cannot close window
     
     //panels are set up
     panel1.setLayout(null);//main screen
