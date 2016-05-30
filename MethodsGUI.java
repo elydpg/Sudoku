@@ -120,10 +120,9 @@ public class MethodsGUI {
     frame1.setSize(600,600);
     frame1.setLocationRelativeTo(null); 
     frame1.setResizable(false);
-    frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame2.setSize(200,180);
     frame2.setResizable(false);
-    frame2.setUndecorated(true);//gets rid of tool bar at top of window
+    frame2.setDefaultCloseOperation(0);//cannot close window
     
     //panels are set up
     panel1.setLayout(null);//main screen
