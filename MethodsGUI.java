@@ -1,7 +1,7 @@
 //Author: Zachary Minuk
 //Purpose: contains all methods relevent to the GUI of Sudoku program
 //Date created: March 26, 2016
-//Date modified: May 28, 2016
+//Date modified: May 30, 2016
 
 import java.io.*;
 import java.util.Arrays;
@@ -30,7 +30,7 @@ public class MethodsGUI {
   
   //graphical fields
   public static JFrame frame1 = new JFrame("Sudoku"); 
-  public static Dlg frame2 = new Dlg(new JFrame(),"Info");
+  public static JDialog frame2 = new JDialog(new JFrame(),"Info");
   public static JPanel panel1 = new JPanel();
   public static JPanel panel2 = new JPanel (new GridLayout(9,9,-2,-2));
   public static JPanel panel3 = new JPanel();
