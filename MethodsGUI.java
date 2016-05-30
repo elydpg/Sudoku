@@ -30,7 +30,7 @@ public class MethodsGUI {
   
   //graphical fields
   public static JFrame frame1 = new JFrame("Sudoku"); 
-  public static JFrame frame2 = new JFrame("Info:");
+  public static JFrame frame2 = new JFrame("Info");
   public static JPanel panel1 = new JPanel();
   public static JPanel panel2 = new JPanel (new GridLayout(9,9,-2,-2));
   public static JPanel panel3 = new JPanel();
@@ -388,19 +388,19 @@ public class MethodsGUI {
   public static int recordMove(int pos,byte init,byte fin){
     int newinit=0xFF&init;
     int newfin=0xFF&fin;
-    return 0x40000000|(Math.min(0x3FFF,pos)<<16)|(newinit<<8)|newfin;
+    return ((0x3FFF&pos)<<16)|(newinit<<8)|newfin;
   }//end of record move
   
   public static int getPos(int move){
-    return ((move<<2)>>>2)>>>16;
+    return move>>>16;
   }//end of get pos
   
   public static byte getInit(int move){
-    return (byte)(0xFF&((move<<2)>>>2)>>>8);
+    return (byte)(0xFF&(move>>>8));
   }//end of getInit
   
   public static byte getFin(int move){
-    return (byte)(0xFF&((move<<2)>>>2));
+    return (byte)(0xFF&move);
   }//end of getFin
   
   public static void gameOver () {

@@ -55,13 +55,11 @@ public class MethodsGUI {
   public static JLabel time = new JLabel("Time: " + formatTime(timeKeeper), SwingConstants.CENTER);
   public static JLabel other = new JLabel ("<html><center>This game was developed by Ely Golden, Zachary Minuk, and Ethan Orlander under " +
                                            "the supervision of Mark Rottmann at Tanenbaum CHAT Wallenberg Campus. All rights reserved. \u00a9");
-  public static JLabel helpLabel = new JLabel("<html><center>The Classic Sudoku is a number placing puzzle based on a 9x9 grid with several " + 
-                                              "given numbers. The object is to place the numbers 1 to 9 in the empty squares so that each row, each " +
-                                              "column and each 3x3 box contains the same number only once. Sudoku puzzles come in endless number " + 
-                                              "combinations taking anything from five minutes to several hours to solve. This version, created kindly by " + 
+  public static JLabel helpLabel = new JLabel("<html><center>The object is to place the numbers 1 to 9 in the empty squares so that each row, each " +
+                                              "column and each 3x3 box contains the same number only once. This version, created kindly by " + 
                                               "Zachary Minuk, Ethan Orlander, and Ely Golden (under the supervision of Mark Rottman of course) " + 
-                                              "generates a sudoku for you and times you in seconds to complete it. Your time is then saved and can " + 
-                                              "be viewed from our leaderboards. So go, play, have fun! Try your best to set a new high score!! <br><br>" + 
+                                              "generates a sudoku for you and times you as you complete it. Your time is then saved and can " + 
+                                              "be viewed from our leaderboards. <br><br>" + 
                                               "In the options menu you can chose from a range of difficulties to challenge yourself with. "+ 
                                               "<br><br> If in options you set Invalid Tiles to 'do not show' you will get no feedback on whether your numbers " +
                                               "are correct or not. <br><br> If in options you set Invalid Tiles to 'show currently conflicting', you will get feedback " +
@@ -70,7 +68,9 @@ public class MethodsGUI {
                                               "If in options you set Invalid Tiles to 'show conflicting with solution', every number you input will turn red if " +
                                               "it should not be there.<br><br> Press shift + z to undo your previous moves. " + 
                                               "<br><br>Once the game is correctly solved, you will automatically be redirected, there is no button to " + 
-                                              " press when you think you have solved it.");
+                                              " press when you think you have solved it.<br><br>If you're playing a game and for some reason the " + 
+                                              "window goes out of focus, the game will pause and take you back to the main screen, where you can press resume" + 
+                                              " game to continue.");
   public static JLabel leaderboardLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
   public static JLabel setting = new JLabel ("Difficulty:");
   public static JLabel hintSetting = new JLabel ("Invalid Tiles:");
@@ -141,7 +141,7 @@ public class MethodsGUI {
     title.setFont(new Font("American Typewriter", Font.PLAIN, 50));
     other.setFont(new Font("American Typewriter", Font.PLAIN, 14));
     time.setFont(new Font("American Typewriter", Font.PLAIN, 15));
-    helpLabel.setFont(new Font("American Typewriter", Font.PLAIN, 15));
+    helpLabel.setFont(new Font("American Typewriter", Font.PLAIN, 14));
     leaderboardLabel.setFont(new Font("American Typewriter", Font.PLAIN, 18));
     setting.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     hintSetting.setFont(new Font("American Typewriter", Font.PLAIN, 15));
