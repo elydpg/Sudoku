@@ -115,9 +115,10 @@ public class MethodsGUI {
     }});//end of timer
   
   public static void intro () {
-    //sets the image icon
+     //sets the image icon on dock
     frame1.setIconImage(new ImageIcon("res/logo.png").getImage());
     try{com.apple.eawt.Application.getApplication().setDockIconImage(new ImageIcon("res/logo.png").getImage());}catch(Exception e){}
+    
     //frames initialized and set up
     frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame1.setSize(600,600);
@@ -178,7 +179,7 @@ public class MethodsGUI {
     hintSetting.setBounds(90,200,190,50);
     currentMode.setBounds(0,120,200,40);
     
-    //initialize the JTextFields with a black border and add them to the panel
+    //initialize the JTextFields with a black border and adds them to the panel
     for(int i=0;i<arrayFields.length;i++){
       arrayFields[i] = new JTextField(" ");
       arrayFields[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(10,10,10,10)));
@@ -200,8 +201,7 @@ public class MethodsGUI {
     check.addActionListener(new MainClass.check());
     frame1.addKeyListener(new MainClass.undo ());
     frame1.addWindowFocusListener(new MainClass.pause ());
-    frame2.setFocusableWindowState(false);//this is a bodge; hoping to discuss in the near future
-    //frame2.addKeyListener(new MainClass.undo ());
+    frame2.setFocusableWindowState(false);
     
     //everything needed is added to all panels and frames
     panel1.add(playButton);
@@ -265,7 +265,7 @@ public class MethodsGUI {
       frame2.setVisible(true);
       panel2.setVisible(true);
     } else {
-      dialog.setVisible(true);//displays error message
+      dialog.setVisible(true);//displays error message when no game to resume
     }//end of if
   }//end of grid reveal method
   
@@ -285,7 +285,6 @@ public class MethodsGUI {
     addGameToPanel();
     playButton.setEnabled(true);
     load.setText("");
-    //positions both frames in centre of screen (regardless of monitor's resolution)
     frame1.setLocation(((width-810)/2), ((height-650)/2));
     frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);
     timeKeeper = 0;//resets timer incase it is not the first game being played
