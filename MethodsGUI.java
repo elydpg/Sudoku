@@ -115,6 +115,9 @@ public class MethodsGUI {
     }});//end of timer
   
   public static void intro () {
+    //sets the image icon
+    frame1.setIconImage(new ImageIcon("res/logo.png").getImage());
+    try{com.apple.eawt.Application.getApplication().setDockIconImage(new ImageIcon("res/logo.png").getImage());}catch(Exception e){}
     //frames initialized and set up
     frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame1.setSize(600,600);
