@@ -115,16 +115,9 @@ public class MethodsGUI {
     }});//end of timer
   
   public static void intro () {
-<<<<<<< HEAD:ComSciFSTSudoku/MethodsGUI.java
     //sets the image icon
     frame1.setIconImage(new ImageIcon("resources/logo.png").getImage());
     try{com.apple.eawt.Application.getApplication().setDockIconImage(new ImageIcon("resources/logo.png").getImage());}catch(Exception e){}
-=======
-     //sets the image icon on dock
-    frame1.setIconImage(new ImageIcon("res/logo.png").getImage());
-    try{com.apple.eawt.Application.getApplication().setDockIconImage(new ImageIcon("res/logo.png").getImage());}catch(Exception e){}
-    
->>>>>>> origin/master:MethodsGUI.java
     //frames initialized and set up
     frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame1.setSize(600,600);
@@ -185,7 +178,7 @@ public class MethodsGUI {
     hintSetting.setBounds(90,200,190,50);
     currentMode.setBounds(0,120,200,40);
     
-    //initialize the JTextFields with a black border and adds them to the panel
+    //initializes the JTextFields with a black border and adds them to the panel
     for(int i=0;i<arrayFields.length;i++){
       arrayFields[i] = new JTextField(" ");
       arrayFields[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(10,10,10,10)));
