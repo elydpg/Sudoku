@@ -188,11 +188,11 @@ public class Sudoku{
     /**Generates amount size 3 Sudokus using the QQWIng API, with difficulty equal to difficulty. 
       * Valid difficulties are "simple","easy","intermediate","expert", or "unknown". */
     public static Sudoku[] generateFromApi(int amount,String difficulty)throws Exception{
-      File file = new File(Sudoku.class.getClassLoader().getResource("ComSciFSTSudoku/SudokuClass/qqwing-1.3.4.jar").toURI());
-      file.setReadable(true, false);
-      file.setExecutable(true, false);
-      file.setWritable(true, false);
-      String[] command={"java","-jar",file.getCanonicalPath(),"--generate",""+amount, "--difficulty",difficulty,"--one-line"};
+      //File file = new File(Sudoku.class.getClassLoader().getResource("ComSciFSTSudoku/SudokuClass/qqwing-1.3.4.jar").toURI());
+      //file.setReadable(true, false);
+      //file.setExecutable(true, false);
+      //file.setWritable(true, false);
+      String[] command={"java","-jar","ComSciFSTSudoku/SudokuClass/qqwing-1.3.4.jar","--generate",""+amount, "--difficulty",difficulty,"--one-line"};
       Process proc = Runtime.getRuntime().exec(command);
       proc.waitFor();
       // Then retreive the process output
