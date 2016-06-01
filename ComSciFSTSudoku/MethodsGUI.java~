@@ -1,6 +1,7 @@
 //Author: Zachary Minuk
+//Purpose: contains all methods relevent to the GUI of Sudoku program
 //Date created: March 26, 2016
-//Date modified: June 1, 2016
+//Date modified: May 30, 2016
 package ComSciFSTSudoku;
 import java.io.*;
 import java.util.Arrays;
@@ -11,87 +12,49 @@ import javax.swing.border.*;
 import ComSciFSTSudoku.org.json.*;
 import ComSciFSTSudoku.ReadWrite.FileIO;
 import ComSciFSTSudoku.SudokuClass.Sudoku;
-/**A class containing the utility methods for the Sudoku GUI. */
+
 public class MethodsGUI {
   //fields that need to be loaded from file, method required to deal with uncaught exception in global declaration
-  /**A utility method that gets the file data from gamestate.json*/
   public static JSONObject getFileData(){try{return new JSONObject(new String(FileIO.readBinary(new RandomAccessFile("data/gamestate.json","rw")),"UTF-8"));}catch(Exception e){return new JSONObject();}}
-  /**The JSONObject representing the gamestate.*/
   public static JSONObject fileData= getFileData();
-  /**An int representing the selected game difficulty in options.*/
   public static int difficultyIndex = fileData.getInt("difficultyIndex");
-  /**An int representing the actual difficulty of the current game.*/
   public static int actualDifficulty = fileData.getInt("actualDifficulty");
-  /**An int representing the selected invalid tiles setting in options.*/
-  public static int invalidTilesIndex = fileData.getInt("invalidTilesIndex");
-  /**A long representing the time played.*/
+  public static int invalidTilesIndex = fileData.getInt("invalidTilesIndex");;
   public static long timeKeeper = fileData.getLong("timeKeeper");
-  /**A boolean representing whether or not there is a game being played.*/
   public static boolean gameOver = fileData.getBoolean("gameOver");
-  /**A Sudoku representing the original state of the game. Written to file as a String.*/
   public static Sudoku originalGame = Sudoku.constructFromString(fileData.getString("originalGame"));
-  /**A Sudoku representing the current state of the game. Written to file as a String.*/
   public static Sudoku game = Sudoku.constructFromString(fileData.getString("game"));
-  /**A Sudoku representing the solved state of the game. Written to file as a String.*/
   public static Sudoku solvedGame = Sudoku.constructFromString(fileData.getString("solvedGame"));
-  /**A utility method that converts a JSONArray to an int array.*/
   public static int[] jsonArrayToIntArray(JSONArray n){int[] a=new int[n.length()];for(int c=0;c<a.length;c++){a[c]=n.getInt(c);}return a;}
-  /**An int array representing the moves made in the current game.*/
   public static int[] moves=jsonArrayToIntArray(fileData.getJSONArray("moves"));
   
   //graphical fields
-  /**the main frame*/
   public static JFrame frame1 = new JFrame("Sudoku"); 
-  /**the frame for the mini-stat window*/
   public static JDialog frame2 = new JDialog(new JFrame(),"Info");
-  /**the panel for the main screen, holds the buttons, text, and gif*/
   public static JPanel panel1 = new JPanel();
-  /**The panel for the sudoku grid, contains a grid layout that is 9x9*/
   public static JPanel panel2 = new JPanel (new GridLayout(9,9,-2,-2));
-  /**the panel that holds information in the stat-window (timer and buttons)*/
   public static JPanel panel3 = new JPanel();
-  /**panel that holds JLabels and JComboBoxes for the leaderboard, help, and options page*/
   public static JPanel panel4 = new JPanel();
-  /**gets the image 'play.png' into an imageIcon*/
   public static ImageIcon playImage = new ImageIcon ("resources/play.png");
-  /**gets the image 'help.png' into an imageIcon*/
   public static ImageIcon helpImage = new ImageIcon ("resources/help.png");
-  /**gets the image 'leaderboard.png' into an imageIcon*/
   public static ImageIcon leaderImage = new ImageIcon ("resources/leaderboard.png");
-  /**gets the image 'option.png' into an imageIcon*/
   public static ImageIcon optionImage = new ImageIcon ("resources/option.png");
-  /**gets the image 'resume game.png' into an imageIcon*/
   public static ImageIcon resumeImage = new ImageIcon ("resources/resume game.png");
-  /**gets the gif 'logo.gif' into an imageIcon*/
   public static ImageIcon gif = new ImageIcon ("resources/logo.gif");
-  /**creates a button with the image playImage*/
   public static JButton playButton = new JButton (playImage);
-  /**creates a button with the image helpImage*/
   public static JButton helpButton = new JButton (helpImage);
-  /**creates a button with the image leaderImage*/
   public static JButton leaderButton = new JButton (leaderImage);
-  /**creates a button with the image optionImage*/
   public static JButton optionButton = new JButton (optionImage);
-  /**creates a button that displays the text: Go back*/
   public static JButton back = new JButton("Go Back");
-  /**creates a button that displays the text: Go To Main Screen*/
   public static JButton back2 = new JButton("Go To Main Screen");
-  /**creates a button that displays the text: Show Solution*/
   public static JButton check = new JButton("Show Solution");
-  /**creates a button with the image resumeImage*/
   public static JButton resumeButton = new JButton (resumeImage);
-  /**creates a JLabel with the gif*/
   public static JLabel gifLabel = new JLabel (gif);
-  /**creates a JLabel that displays the title of the game*/
   public static JLabel title = new JLabel ("Sudoku");
-  /**creates a JLabel that shows you which difficulty you are playing in*/
   public static JLabel currentMode = new JLabel ("Difficulty: ", SwingConstants.CENTER);
-  /**creates a JLabel that displays the time*/
   public static JLabel time = new JLabel("Time: " + formatTime(timeKeeper), SwingConstants.CENTER);
-  /**creates a JLabel that gives some game info at the bottom of main screen*/
   public static JLabel other = new JLabel ("<html><center>This game was developed by Ely Golden, Zachary Minuk, and Ethan Orlander under " +
                                            "the supervision of Mark Rottmann at Tanenbaum CHAT Wallenberg Campus. All rights reserved. \u00a9");
-  /**creates a JLabel with all help information*/
   public static JLabel helpLabel = new JLabel("<html><center>The object is to place the numbers 1 to 9 in the empty squares so that each row, each " +
                                               "column and each 3x3 box contains the same number only once. This version, created kindly by " + 
                                               "Zachary Minuk, Ethan Orlander, and Ely Golden (under the supervision of Mark Rottman of course) " + 
@@ -108,44 +71,25 @@ public class MethodsGUI {
                                               " press when you think you have solved it.<br><br>If you're playing a game and for some reason the " + 
                                               "window goes out of focus, the game will pause and take you back to the main screen, where you can press resume" + 
                                               " game to continue.");
-  /**creates a JLabel that displays when you press leaderboard button*/
   public static JLabel leaderboardLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
-  /**creates a JLabel that holds the text: Difficulty*/
   public static JLabel setting = new JLabel ("Difficulty:");
-  /**creates a JLabel that holds the text: Invalid Tiles*/
   public static JLabel hintSetting = new JLabel ("Invalid Tiles:");
-  /**creates a JOptionPane to display when you try to resume a game when there is no game to resume*/
   public static JOptionPane option = new JOptionPane("<html><font face = 'American Typewriter'>There is no game to resume");
-  /**creates a JDialog which displays the JOptionPane*/
   public static JDialog dialog = option.createDialog(null);
-  /**creates a JLabel that displays loading when the game is generating a new sudoku */
   public static JLabel load = new JLabel ("");
   
   //other fields
-  /**creates a JTextField array that represents the text boxes into which the numbers are inserted.*/
   public static JTextField [] arrayFields = new JTextField [81];
-  /**An int representing the selected textbox. Used for number insertion.*/
-  public static int selectedField = -1;
-  /**An int representing the monitor's width.*/
-  public static int width;
-  /**An int representing the monitor's height.*/
-  public static int height;
-  /**A string representing backup text. Used for number insertion.*/
+  public static int selectedField = -1, width, height;
   public static String backupText = "";
-  /**A String array representing the possibile difficulty settings.*/
   public static String [] difficulty = {"random","simple","easy","intermediate","expert"};
-  /**A String array representing the possibile invalid tiles settings.*/
   public static String [] hints = {"do not show","show currently conflicting","show conflicting with solution"};
-  /**A JComboBox allowing the selection of the difficulty settings.*/
   public static JComboBox <String> difficultySetting = new JComboBox <> (difficulty);
-  /**A JComboBox allowing the selection of the invalid tiles settings.*/
   public static JComboBox <String> hintBox = new JComboBox <> (hints);
-  /**A long that is used to calculate time played based on the System Time.*/
   public static long timestamp=System.currentTimeMillis()-timeKeeper;
-  /**A boolean representing whether or not the undo function is possible.*/
   public static boolean undoPossible=false;
   
-  /**makes time appear in hours:minutes:seconds format*/
+  //makes time appear in hours:minutes:seconds format
   public static String formatTime(long time){
     String seconds=""+Math.floorMod(Math.floorDiv(time,1000l),60);
     String minutes=""+Math.floorMod(Math.floorDiv(time,60000l),60);
@@ -155,21 +99,21 @@ public class MethodsGUI {
     return hours+":"+minutes+":"+seconds;
   }//end of format time
   
-  /**creates timer (must be global to prevent speed issues)*/
+  //creates timer (must be global to prevent speed issues)
   public static Timer timey = new Timer (50, new ActionListener() {
     public void actionPerformed (ActionEvent e) {  
       timeKeeper=System.currentTimeMillis()-timestamp;
       time.setText("Time: " + formatTime(timeKeeper));//updates JLabel
     }});//end of timer
   
-  /**creates loading timer (must be global to prevent speed issues)*/
+  //creates timer (must be global to prevent speed issues)
   public static Timer loadingTimer = new Timer (50, new ActionListener() {
     public void actionPerformed (ActionEvent e) {
       if(playButton.isEnabled()==false){
-        gridDisplay();
+      gridDisplay();
       }
     }});//end of timer
-  /**The method that runs on game start. Initializes all the graphics and settings. */
+  
   public static void intro () {
     //sets the image icon
     frame1.setIconImage(new ImageIcon("resources/logo.png").getImage());
@@ -286,7 +230,6 @@ public class MethodsGUI {
     mainScreen();//runs next method
   }//end of intro method
   
-  /**Shows the Main Screen.*/
   public static void mainScreen () {
     //makes sure only stuff needed is visible (incase user has switched between pages)
     timey.stop();//stops the clock
@@ -306,7 +249,6 @@ public class MethodsGUI {
     panel1.setVisible(true);
   }//end of main Screen method
   
-  /**Shows the Grid from the "resume game" button.*/
   public static void gridReveal() {
     undoPossible=true;
     if(gameOver == false){
@@ -326,7 +268,6 @@ public class MethodsGUI {
     }//end of if
   }//end of grid reveal method
   
-  /**Creates a new game.*/
   public static void gridDisplay () {
     loadingTimer.stop();
     gameOver = false;
@@ -356,7 +297,6 @@ public class MethodsGUI {
     check.setEnabled(true);
   }//end of grid display method
   
-  /**Shows the solution.*/
   public static void solutionDisplay () {
     gameOver = true;
     undoPossible=false;
@@ -377,7 +317,6 @@ public class MethodsGUI {
     check.setEnabled(false);
   }//end of show solution method
   
-  /**Adds the game to the JTextField grid.*/
   public static void addGameToPanel(){
     panel2.removeAll();//resets previous board
     for (int i = 0; i < arrayFields.length; i++) {
@@ -388,11 +327,11 @@ public class MethodsGUI {
       FocusListener[] f=arrayFields[i].getFocusListeners();
       for (int j = 0; j < f.length; j++) {
         if(f[j].getClass()==MainClass.locate.class){arrayFields[i].removeFocusListener(f[j]);}
-      }//end of for loop
+      }
       KeyListener[] k=arrayFields[i].getKeyListeners();
       for (int j = 0; j < k.length; j++) {
         if(k[j].getClass()==MainClass.key.class||k[j].getClass()==MainClass.undo.class){arrayFields[i].removeKeyListener(k[j]);}
-      }//end of for loop
+      }
       arrayFields[i].setForeground(new Color (0,0,0));
       if (currentTile == -1) {
         arrayFields[i].addFocusListener(new MainClass.locate ()); 
@@ -413,15 +352,13 @@ public class MethodsGUI {
     }//end of for loop
   }//end of add game to panel
   
-  /**Checks the current game for invalid tiles and updates the grid accordingly.*/
   public static void checkInvalidTiles(){
     for(int c = 0; c < 81; c++){
-      if(invalidTilesIndex>0&&(game.conflictingTilePositions(c).length!=0||(invalidTilesIndex==2&&game.getTile(c)!=solvedGame.getTile(c)))){arrayFields[c].setForeground(new Color (255,0,0));}
-      else{arrayFields[c].setForeground(new Color (0,0,0));}
-    }//end of for loop
+        if(invalidTilesIndex>0&&(game.conflictingTilePositions(c).length!=0||(invalidTilesIndex==2&&game.getTile(c)!=solvedGame.getTile(c)))){arrayFields[c].setForeground(new Color (255,0,0));}
+        else{arrayFields[c].setForeground(new Color (0,0,0));}
+      }//end of for loop
   }//end of check invalid tiles
   
-  /**Shows the help screen.*/
   public static void helpMethod () {
     panel1.setVisible(false);
     back.setVisible(true);
@@ -430,7 +367,6 @@ public class MethodsGUI {
     frame1.add(panel4);
   }//end of help method
   
-  /**Shows the leaderboard.*/
   public static void leaderboardMethod () {
     panel1.setVisible(false);
     back.setVisible(true);
@@ -439,7 +375,6 @@ public class MethodsGUI {
     frame1.add(panel4);
   }//end of leaderboard method
   
-  /**Shows the options screen.*/
   public static void optionMethod () {
     panel1.setVisible(false);
     back.setVisible(true);
@@ -451,29 +386,24 @@ public class MethodsGUI {
     frame1.add(panel4);
   }//end of help method
   
-  /**Converts a move, consisting of a position, initial value, and final value, into a single int.*/
   public static int recordMove(int pos,byte init,byte fin){
     int newinit=0xFF&init;
     int newfin=0xFF&fin;
     return ((0x3FFF&pos)<<16)|(newinit<<8)|newfin;
   }//end of record move
   
-  /**Gets the position of a converted int move.*/
   public static int getPos(int move){
     return move>>>16;
   }//end of get pos
   
-  /**Gets the initial value of a converted int move.*/
   public static byte getInit(int move){
     return (byte)(0xFF&(move>>>8));
   }//end of getInit
   
-  /**Gets the final value of a converted int move.*/
   public static byte getFin(int move){
     return (byte)(0xFF&move);
   }//end of getFin
   
-  /**Runs when the user has solved the game.*/
   public static void gameOver () {
     timey.stop();
     gameOver = true;
@@ -485,7 +415,7 @@ public class MethodsGUI {
     long internalTime=timeKeeper;
     if(name!=null){
       //code for adding values to the leaderboard
-    }//end of if
+    }
     mainScreen();
   }//end of game over method
 }//end of class
