@@ -92,7 +92,7 @@ public class MainClass {
     /**WindowGainedFocus method.*/
     public void windowGainedFocus (WindowEvent e) {}
     /**WindowLostFocus method.*/
-    public void windowLostFocus (WindowEvent e) {MethodsGUI.mainScreen();}
+    public void windowLostFocus (WindowEvent e) {if(MethodsGUI.undoPossible){MethodsGUI.mainScreen();}}
   }//runs the main screen method when the window loses focus
   
   /**Focus Listener that determines when a JTextArea is pressed and determines which of the 81 it is*/
