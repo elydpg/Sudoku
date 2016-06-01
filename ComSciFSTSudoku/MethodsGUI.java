@@ -50,8 +50,10 @@ public class MethodsGUI {
   public static JPanel panel2 = new JPanel (new GridLayout(9,9,-2,-2));
   /**the panel that holds information in the stat-window (timer and buttons)*/
   public static JPanel panel3 = new JPanel();
-  /**panel that holds JLabels and JComboBoxes for the leaderboard, help, and options page*/
+  /**panel that holds JLabels and JComboBoxes for help and options page*/
   public static JPanel panel4 = new JPanel();
+  /**panel that holds the leaderboard table*/
+  public static JPanel panel5 = new JPanel(new GridLayout(19,4));
   /**gets the image 'play.png' into an imageIcon*/
   public static ImageIcon playImage = new ImageIcon ("resources/play.png");
   /**gets the image 'help.png' into an imageIcon*/
@@ -108,8 +110,6 @@ public class MethodsGUI {
                                               " press when you think you have solved it.<br><br>If you're playing a game and for some reason the " + 
                                               "window goes out of focus, the game will pause and take you back to the main screen, where you can press resume" + 
                                               " game to continue.");
-  /**creates a JLabel that displays when you press leaderboard button*/
-  public static JLabel leaderboardLabel = new JLabel("This feature has been disabled", SwingConstants.CENTER);
   /**creates a JLabel that holds the text: Difficulty*/
   public static JLabel setting = new JLabel ("Difficulty:");
   /**creates a JLabel that holds the text: Invalid Tiles*/
@@ -120,6 +120,8 @@ public class MethodsGUI {
   public static JDialog dialog = option.createDialog(null);
   /**creates a JLabel that displays loading when the game is generating a new sudoku */
   public static JLabel load = new JLabel ("");
+  /**JLabel array that holds the leaderboard info*/
+  public static JLabel [] table = new JLabel[76];
   
   //other fields
   /**creates a JTextField array that represents the text boxes into which the numbers are inserted.*/
@@ -174,6 +176,7 @@ public class MethodsGUI {
     //sets the image icon
     frame1.setIconImage(new ImageIcon("resources/logo.png").getImage());
     try{com.apple.eawt.Application.getApplication().setDockIconImage(new ImageIcon("resources/logo.png").getImage());}catch(Exception e){}
+    
     //frames initialized and set up
     frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame1.setSize(600,600);
@@ -187,7 +190,8 @@ public class MethodsGUI {
     panel1.setLayout(null);//main screen
     panel2.setBorder(BorderFactory.createEmptyBorder(15,15,15,15)); //sudoku grid
     panel3.setLayout(null);//stat window
-    panel4.setLayout(null);//option, help, leaderboard window
+    panel4.setLayout(null);//option and help window
+    panel5.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));//leaderboard table
     
     //buttons change when mouse is over them
     playButton.setRolloverIcon(new ImageIcon("resources/play hover.png"));
@@ -201,7 +205,6 @@ public class MethodsGUI {
     other.setFont(new Font("American Typewriter", Font.PLAIN, 14));
     time.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     helpLabel.setFont(new Font("American Typewriter", Font.PLAIN, 14));
-    leaderboardLabel.setFont(new Font("American Typewriter", Font.PLAIN, 18));
     setting.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     hintSetting.setFont(new Font("American Typewriter", Font.PLAIN, 15));
     currentMode.setFont(new Font("American Typewriter", Font.PLAIN, 15));
@@ -225,7 +228,6 @@ public class MethodsGUI {
     time.setBounds(0,10,200,23);
     helpLabel.setBounds(15,0,570,520);
     back.setBounds(240,520,120,30);
-    leaderboardLabel.setBounds(0,0,600,600);
     back2.setBounds(30,50,140,30);
     check.setBounds(40,90,120,30);
     difficultySetting.setBounds(210,100,200,50);
@@ -240,6 +242,28 @@ public class MethodsGUI {
       arrayFields[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(10,10,10,10)));
     }//end of for loop
     addGameToPanel();
+    
+    //initializes the JLabels for the leaderboard table and adds them to panel5
+    for (int i = 0; i < table.length; i++) {
+      if (i == 0) {
+        table[i] = new JLabel("Name", SwingConstants.CENTER);       
+        table[i].setFont(new Font("American Typewriter", Font.BOLD, 12));
+      }else if (i == 1) {
+        table[i] = new JLabel("Difficulty", SwingConstants.CENTER);
+        table[i].setFont(new Font("American Typewriter", Font.BOLD, 12));
+      } else if (i == 2) {
+        table[i] = new JLabel("Time", SwingConstants.CENTER);
+        table[i].setFont(new Font("American Typewriter", Font.BOLD, 12));
+      } else if (i == 3) {
+        table[i] = new JLabel("Rank", SwingConstants.CENTER);
+        table[i].setFont(new Font("American Typewriter", Font.BOLD, 12));
+      }else {
+        table[i] = new JLabel("");
+        table[i].setFont(new Font("American Typewriter", Font.BOLD, 12));
+      }//end of if
+      panel5.add(table[i]);
+      table[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(1,1,1,1)));
+    }//end of for loop
     
     //sets settings for options to what they were
     difficultySetting.setSelectedIndex(difficultyIndex);
@@ -273,7 +297,6 @@ public class MethodsGUI {
     panel3.add(currentMode);
     panel4.add(back);
     panel4.add(helpLabel);
-    panel4.add(leaderboardLabel);
     panel4.add(difficultySetting);
     panel4.add(hintBox);
     panel1.add(load);
@@ -292,10 +315,10 @@ public class MethodsGUI {
     timey.stop();//stops the clock
     loadingTimer.start();
     undoPossible=false;//makes undoing moves impossible (since no game is being played)
-    frame1.setLocationRelativeTo(null);//centers main screen incase user has pressed back button from the play section 
+    frame1.setLocationRelativeTo(null);//centers main screen incase user has pressed back button from the play section
+    panel5.setVisible(false);
     helpLabel.setVisible(false);
     back.setVisible(false);
-    leaderboardLabel.setVisible(false);
     difficultySetting.setVisible(false);
     setting.setVisible(false);
     hintSetting.setVisible(false);
@@ -303,6 +326,9 @@ public class MethodsGUI {
     frame2.setVisible(false);
     panel4.setVisible(false);
     panel2.setVisible(false);
+    time.setVisible(true);
+    check.setVisible(true);
+    currentMode.setVisible(true);
     panel1.setVisible(true);
   }//end of main Screen method
   
@@ -432,11 +458,15 @@ public class MethodsGUI {
   
   /**Shows the leaderboard.*/
   public static void leaderboardMethod () {
+    frame1.setLocation(((width-810)/2), ((height-650)/2));
+    frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);
+    time.setVisible(false);
+    check.setVisible(false);
+    currentMode.setVisible(false);
+    frame1.add(panel5);
+    frame2.setVisible(true);
     panel1.setVisible(false);
-    back.setVisible(true);
-    leaderboardLabel.setVisible(true);
-    panel4.setVisible(true);
-    frame1.add(panel4);
+    panel5.setVisible(true);
   }//end of leaderboard method
   
   /**Shows the options screen.*/
