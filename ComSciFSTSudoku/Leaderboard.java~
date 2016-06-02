@@ -4,7 +4,7 @@
 package ComSciFSTSudoku;
 import java.sql.*;
 import java.util.Arrays;
-
+/**A utility class that stores and manages upload of the leaderboard.*/
 public class Leaderboard implements Comparable<Leaderboard>{
   
   public static String url = "jdbc:mysql://sql5.freesqldatabase.com:3306/sql5121998";
@@ -16,11 +16,13 @@ public class Leaderboard implements Comparable<Leaderboard>{
   private String name;
   private long time;
   private int invertedDifficulty;
+  private boolean isRemote;
   
-  private Leaderboard(String nam, long tim, int invertedDiff){
-    name=nam;
+  private Leaderboard(String nam, long tim, int invertedDiff, boolean rem){
+    name=nam.substring(0,nam.length()>16?nam.length():16);
     time=tim;
     invertedDifficulty=invertedDiff;
+    isRemote=rem;
   }
   
   public String getName(){
@@ -58,26 +60,25 @@ public class Leaderboard implements Comparable<Leaderboard>{
       theLeaderboard = new Leaderboard[length];
       myRs.first();
       do{
-        theLeaderboard[myRs.getRow()] = new Leaderboard(myRs.getString("Name"), myRs.getLong("Score"), myRs.getInt("Difficulty")); 
+        theLeaderboard[myRs.getRow()] = new Leaderboard(myRs.getString("Name"), myRs.getLong("Score"), myRs.getInt("Difficulty"),true); 
       }while(myRs.next());
     }catch (Exception e){}
     Arrays.sort(theLeaderboard);
   }
   
   public static void addEntry(String nam, long tim, int invertedDiff){
-    
     length++;
     theLeaderboard=Arrays.copyOf(theLeaderboard,length);
-    theLeaderboard[length-1] = new Leaderboard(nam, tim, invertedDiff);
+    theLeaderboard[length-1] = new Leaderboard(nam, tim, invertedDiff,false);
     Arrays.sort(theLeaderboard);
+    if(length>4096){
+      length=4096;
+      theLeaderboard=Arrays.copyOf(theLeaderboard,length);
+    }
   }
   
-  //this method isn't strictly nescessary
-  public static void organizeLeaderboard(){
-    
-    Arrays.sort(theLeaderboard);
-    
-  }
+  /**Organizes the leaderboard.*/
+  public static void organizeLeaderboard(){Arrays.sort(theLeaderboard);}
   
 //  public static void updateSQLData(){
 //    try{

@@ -57,11 +57,13 @@ public class Leaderboard implements Comparable<Leaderboard>{
       ResultSet myRs = myStmt.executeQuery("select * from Leaderboard");
       myRs.last();
       length = myRs.getRow() + 1;
-      theLeaderboard = new Leaderboard[length];
+      theLeaderboard = new Leaderboard[Math.min(length,4096)];
       myRs.first();
+      int counter=0;
       do{
         theLeaderboard[myRs.getRow()] = new Leaderboard(myRs.getString("Name"), myRs.getLong("Score"), myRs.getInt("Difficulty"),true); 
-      }while(myRs.next());
+        counter++;
+      }while(myRs.next()&&counter>4096);
     }catch (Exception e){}
     Arrays.sort(theLeaderboard);
   }
