@@ -82,29 +82,32 @@ public class Leaderboard implements Comparable<Leaderboard>{
   /**Organizes the leaderboard.*/
   public static void organizeLeaderboard(){Arrays.sort(theLeaderboard);}
   
-//  public static void updateSQLData(){
-//    try{
-//     /**Connect to the MySQL database*/
-//      Connection myConn = DriverManager.getConnection(url, user, password);
-//      
-//      /**Create a statement*/
-//      Statement myStmt = myConn.createStatement();
-//     
-//      /**Execute query*/
-//      sql = "delete from Leaderboard";
-//      
-//      myStmt.executeUpdate(sql);
-//      System.out.println("Delete complete.");
-//      
-//      for(int i = 0; i < length; i++){
-//      /**Execute SQL query*/
-//      sql = "insert into Leaderboard "
-//          + " (Name, Score, Difficulty)"
-//          + " values ('"theLeaderboard[i].nam"', '"theLeaderboard[i].tim"', '"theLeaderboard[i].invertedDiff"')";
-//      }
-//      }catch (Exception e){
-//      
-//    }
-//  }
+  public static void updateSQLData(){
+    try{
+     /**Connect to the MySQL database*/
+      Connection myConn = DriverManager.getConnection(url, user, password);
+      
+      /**Create a statement*/
+      Statement myStmt = myConn.createStatement();
+     
+      /**Execute SQL query*/
+      sql = "delete from Leaderboard";
+      
+      myStmt.executeUpdate(sql);
+      System.out.println("Delete complete.");
+      
+      for(int i = 0; i < length; i++){
+      /**Execute SQL query*/
+      sql = "insert into Leaderboard "
+          + " (Name, Score, Difficulty)"
+          + " values ('"+ theLeaderboard[i].nam + "', '" + theLeaderboard[i].tim + "', '" + theLeaderboard[i].invertedDiff + "')";
+      myStmt.executeUpdate(sql);
+      System.out.println("Entry " + i + " set.");
+      }
+      
+      }catch (Exception e){
+      
+    }
+  }
   
 }
