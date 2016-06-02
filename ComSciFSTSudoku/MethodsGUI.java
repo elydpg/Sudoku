@@ -519,8 +519,9 @@ public class MethodsGUI {
     currentMode.setText("Difficulty: " + difficulty[actualDifficulty]);
     String name = JOptionPane.showInputDialog("Congrats on solving a"+(actualDifficulty==1?" ":"n ")+difficulty[actualDifficulty]+" Sudoku! Please enter your name");
     if(name!=null){
+      Leaderboard.getLeaderboard();
       Leaderboard.addEntry(name,timeKeeper,5-actualDifficulty);
-      //Leaderboard.updateSQLData();
+      Leaderboard.updateSQLData();
     }//end of if
     mainScreen();
   }//end of game over method
