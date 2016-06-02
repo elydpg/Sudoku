@@ -1,0 +1,42 @@
+//Author: Ethan Orlander
+//Date created: June 1, 2016
+//Date modified: June 1, 2016
+package ComSciFSTSudoku;
+import java.sql.*;
+
+public class Leaderboard{
+  
+  public static Leaderboard[] leaderboard = new Leaderboard[](String, long, int);
+  
+  public static void main(String[] args){{
+    updateLeaderboard();
+  }
+  
+  public static void updateLeaderboard(){
+     /**Connect to the MySQL database*/
+      Connection myConn = DriverManager.getConnection(url, user, password);
+      
+      /**Create a statement*/
+      Statement myStmt = myConn.createStatement();
+     
+      /**Copy current leaderboard*/
+      ResultSet myRs = myStmt.executeQuery("select * from Leaderboard");
+      
+      while(myRs.next()){
+       System.out.println(myRs.getString("Name") + ", " + myRs.getInt("Score")); 
+      }
+  }
+  
+  public static void getInfo(){
+    
+  }
+  
+  public static void getSQLData(){
+    
+  }
+  
+  public static void updateSQLData(){
+    
+  }
+  
+}
