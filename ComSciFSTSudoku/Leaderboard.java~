@@ -16,13 +16,11 @@ public class Leaderboard implements Comparable<Leaderboard>{
   private String name;
   private long time;
   private int invertedDifficulty;
-  private boolean isRemote;
   
-  private Leaderboard(String nam, long tim, int invertedDiff, boolean rem){
-    name=nam.substring(0,nam.length()>16?nam.length():16);
+  private Leaderboard(String nam, long tim, int invertedDiff){
+    name=nam.substring(0,nam.length()<16?nam.length():16);
     time=tim;
     invertedDifficulty=invertedDiff;
-    isRemote=rem;
   }
   
   public String getName(){
@@ -47,21 +45,22 @@ public class Leaderboard implements Comparable<Leaderboard>{
   
   public static void getLeaderboard(){
     try{
-     /**Connect to the MySQL database*/
-      Connection myConn = DriverManager.getConnection(url, user, password);
-      
+      /**Connect to the MySQL database*/
+      Connection myConn = DriverManager.getConnection(url, user, password); 
       /**Create a statement*/
       Statement myStmt = myConn.createStatement();
-     
       /**Copy current leaderboard*/
       ResultSet myRs = myStmt.executeQuery("select * from Leaderboard");
       myRs.last();
       length = myRs.getRow() + 1;
-      theLeaderboard = new Leaderboard[length];
+      theLeaderboard = new Leaderboard[Math.min(length,4096)];
       myRs.first();
+      int counter=0;
       do{
-        theLeaderboard[myRs.getRow()] = new Leaderboard(myRs.getString("Name"), myRs.getLong("Score"), myRs.getInt("Difficulty"),true); 
-      }while(myRs.next());
+        theLeaderboard[myRs.getRow()] = new Leaderboard(myRs.getString("Name"), myRs.getLong("Score"), myRs.getInt("Difficulty")); 
+        counter++;
+      }while(myRs.next()&&counter>4096);
+      myConn.close();
     }catch (Exception e){}
     Arrays.sort(theLeaderboard);
   }
@@ -69,7 +68,7 @@ public class Leaderboard implements Comparable<Leaderboard>{
   public static void addEntry(String nam, long tim, int invertedDiff){
     length++;
     theLeaderboard=Arrays.copyOf(theLeaderboard,length);
-    theLeaderboard[length-1] = new Leaderboard(nam, tim, invertedDiff,false);
+    theLeaderboard[length-1] = new Leaderboard(nam, tim, invertedDiff);
     Arrays.sort(theLeaderboard);
     if(length>4096){
       length=4096;
@@ -80,29 +79,30 @@ public class Leaderboard implements Comparable<Leaderboard>{
   /**Organizes the leaderboard.*/
   public static void organizeLeaderboard(){Arrays.sort(theLeaderboard);}
   
-//  public static void updateSQLData(){
-//    try{
-//     /**Connect to the MySQL database*/
-//      Connection myConn = DriverManager.getConnection(url, user, password);
-//      
-//      /**Create a statement*/
-//      Statement myStmt = myConn.createStatement();
-//     
-//      /**Execute query*/
-//      sql = "delete from Leaderboard";
-//      
-//      myStmt.executeUpdate(sql);
-//      System.out.println("Delete complete.");
-//      
-//      for(int i = 0; i < length; i++){
-//      /**Execute SQL query*/
-//      sql = "insert into Leaderboard "
-//          + " (Name, Score, Difficulty)"
-//          + " values ('"theLeaderboard[i].nam"', '"theLeaderboard[i].tim"', '"theLeaderboard[i].invertedDiff"')";
-//      }
-//      }catch (Exception e){
-//      
-//    }
-//  }
+  public static void updateSQLData(){
+    try{
+      /**Connect to the MySQL database*/
+      Connection myConn = DriverManager.getConnection(url, user, password); 
+      /**Create a statement*/
+      Statement myStmt = myConn.createStatement();
+      /**Execute SQL query*/
+      sql = "delete from Leaderboard";
+      
+      myStmt.executeUpdate(sql);
+      System.out.println("Delete complete.");
+      
+      for(int i = 0; i < length; i++){
+      /**Execute SQL query*/
+      sql = "insert into Leaderboard "
+          + " (Name, Score, Difficulty)"
+          + " values ('"+ theLeaderboard[i].name + "', '" + theLeaderboard[i].time + "', '" + theLeaderboard[i].invertedDifficulty + "')";
+      myStmt.executeUpdate(sql);
+      System.out.println("Entry " + i + " set.");
+      }
+      myConn.close();
+      }catch (Exception e){
+      e.printStackTrace();
+    }
+  }
   
 }
