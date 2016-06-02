@@ -246,20 +246,26 @@ public class MethodsGUI {
     //initializes the JLabels for the leaderboard table and adds them to panel5
     for (int i = 0; i < table.length; i++) {
       if (i == 0) {
-        table[i] = new JLabel("Name", SwingConstants.CENTER);       
-        table[i].setFont(new Font("American Typewriter", Font.BOLD, 12));
+        table[i] = new JLabel("Rank", SwingConstants.CENTER);       
+        table[i].setFont(new Font("American Typewriter", Font.BOLD, 15));
       }else if (i == 1) {
-        table[i] = new JLabel("Difficulty", SwingConstants.CENTER);
-        table[i].setFont(new Font("American Typewriter", Font.BOLD, 12));
+        table[i] = new JLabel("Name", SwingConstants.CENTER);
+        table[i].setFont(new Font("American Typewriter", Font.BOLD, 15));
       } else if (i == 2) {
-        table[i] = new JLabel("Time", SwingConstants.CENTER);
-        table[i].setFont(new Font("American Typewriter", Font.BOLD, 12));
+        table[i] = new JLabel("Difficulty", SwingConstants.CENTER);
+        table[i].setFont(new Font("American Typewriter", Font.BOLD, 15));
       } else if (i == 3) {
-        table[i] = new JLabel("Rank", SwingConstants.CENTER);
-        table[i].setFont(new Font("American Typewriter", Font.BOLD, 12));
+        table[i] = new JLabel("Time", SwingConstants.CENTER);
+        table[i].setFont(new Font("American Typewriter", Font.BOLD, 15));
+      } else if (i%4 == 0) {
+        table[i] = new JLabel(""+(i/4), SwingConstants.CENTER);
+        table[i].setFont(new Font("American Typewriter", Font.BOLD, 15));
+      } else if (i == 73) {
+        table[i] = new JLabel("This is a really long text thingy", SwingConstants.CENTER);
+        table[i].setFont(new Font("American Typewriter", Font.PLAIN, 15));
       }else {
         table[i] = new JLabel("");
-        table[i].setFont(new Font("American Typewriter", Font.BOLD, 12));
+        table[i].setFont(new Font("American Typewriter", Font.PLAIN, 15));
       }//end of if
       panel5.add(table[i]);
       table[i].setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(1,1,1,1)));
@@ -509,9 +515,9 @@ public class MethodsGUI {
     gameOver = true;
     currentMode.setText("Difficulty: " + difficulty[actualDifficulty]);
     String name = JOptionPane.showInputDialog("Congrats on solving a"+(actualDifficulty==1?" ":"n ")+difficulty[actualDifficulty]+" Sudoku! Please enter your name");
-    String diff = difficulty[actualDifficulty];
+    //String diff = difficulty[actualDifficulty];
     int internalDiff=5-actualDifficulty;
-    String timeTaken = formatTime(timeKeeper);
+    //String timeTaken = formatTime(timeKeeper);
     long internalTime=timeKeeper;
     if(name!=null){
       //code for adding values to the leaderboard

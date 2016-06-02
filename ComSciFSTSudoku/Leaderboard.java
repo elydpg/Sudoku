@@ -12,19 +12,27 @@ public class Leaderboard implements Comparable<Leaderboard>{
   public static String password = "mbePPU6Mig";
   public static String sql;
   public static int length = 0;
-  public static Leaderboard[] theLeaderboard;
+  public static Leaderboard[] theLeaderboard=new Leaderboard[0];
   private String name;
   private long time;
   private int invertedDifficulty;
   
-  public static void main(String[] args){
-    getLeaderboard();
-  }
-  
-  public Leaderboard(String nam, Long tim, int invertedDiff){
+  private Leaderboard(String nam, long tim, int invertedDiff){
     name=nam;
     time=tim;
     invertedDifficulty=invertedDiff;
+  }
+  
+  public String getName(){
+    return name;
+  }
+  
+  public long getTime(){
+    return time;
+  }
+  
+  public int getInvertedDifficulty(){
+    return invertedDifficulty;
   }
   
   public int compareTo(Leaderboard l){
@@ -36,7 +44,6 @@ public class Leaderboard implements Comparable<Leaderboard>{
   }
   
   public static void getLeaderboard(){
-    
     try{
      /**Connect to the MySQL database*/
       Connection myConn = DriverManager.getConnection(url, user, password);
@@ -48,18 +55,16 @@ public class Leaderboard implements Comparable<Leaderboard>{
       ResultSet myRs = myStmt.executeQuery("select * from Leaderboard");
       myRs.last();
       length = myRs.getRow() + 1;
-      theLeaderboard = new Leaderboard[length];;
+      theLeaderboard = new Leaderboard[length];
       myRs.first();
       do{
         theLeaderboard[myRs.getRow()] = new Leaderboard(myRs.getString("Name"), myRs.getLong("Score"), myRs.getInt("Difficulty")); 
       }while(myRs.next());
-      Arrays.sort(theLeaderboard);
-    }catch (Exception e){
-      
-    }
+    }catch (Exception e){}
+    Arrays.sort(theLeaderboard);
   }
   
-  public static void addEntry(String nam, Long tim, int invertedDiff){
+  public static void addEntry(String nam, long tim, int invertedDiff){
     
     length++;
     theLeaderboard=Arrays.copyOf(theLeaderboard,length);
@@ -74,29 +79,29 @@ public class Leaderboard implements Comparable<Leaderboard>{
     
   }
   
-  public static void updateSQLData(){
-    try{
-     /**Connect to the MySQL database*/
-      Connection myConn = DriverManager.getConnection(url, user, password);
-      
-      /**Create a statement*/
-      Statement myStmt = myConn.createStatement();
-     
-      /**Execute query*/
-      sql = "delete from Leaderboard";
-      
-      myStmt.executeUpdate(sql);
-      System.out.println("Delete complete.");
-      
-      for(int i = 0; i < length; i++){
-      /**Execute SQL query*/
-      sql = "insert into Leaderboard "
-          + " (Name, Score, Difficulty)"
-          + " values ('"theLeaderboard[i].nam"', '"theLeaderboard[i].tim"', '"theLeaderboard[i].invertedDiff"')";
-      }
-      }catch (Exception e){
-      
-    }
-  }
+//  public static void updateSQLData(){
+//    try{
+//     /**Connect to the MySQL database*/
+//      Connection myConn = DriverManager.getConnection(url, user, password);
+//      
+//      /**Create a statement*/
+//      Statement myStmt = myConn.createStatement();
+//     
+//      /**Execute query*/
+//      sql = "delete from Leaderboard";
+//      
+//      myStmt.executeUpdate(sql);
+//      System.out.println("Delete complete.");
+//      
+//      for(int i = 0; i < length; i++){
+//      /**Execute SQL query*/
+//      sql = "insert into Leaderboard "
+//          + " (Name, Score, Difficulty)"
+//          + " values ('"theLeaderboard[i].nam"', '"theLeaderboard[i].tim"', '"theLeaderboard[i].invertedDiff"')";
+//      }
+//      }catch (Exception e){
+//      
+//    }
+//  }
   
 }
