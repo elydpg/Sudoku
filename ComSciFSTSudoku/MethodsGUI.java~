@@ -260,10 +260,7 @@ public class MethodsGUI {
       } else if (i%4 == 0) {
         table[i] = new JLabel(""+(i/4), SwingConstants.CENTER);
         table[i].setFont(new Font("American Typewriter", Font.BOLD, 15));
-      } else if (i == 73) {
-        table[i] = new JLabel("This is a really long text thingy", SwingConstants.CENTER);
-        table[i].setFont(new Font("American Typewriter", Font.PLAIN, 15));
-      }else {
+      } else {
         table[i] = new JLabel("");
         table[i].setFont(new Font("American Typewriter", Font.PLAIN, 15));
       }//end of if
@@ -464,6 +461,12 @@ public class MethodsGUI {
   
   /**Shows the leaderboard.*/
   public static void leaderboardMethod () {
+    Leaderboard.getLeaderboard();
+    for(int c=0;c<Math.min(18,Leaderboard.theLeaderboard.length);c++){
+      table[(c*4)+4+1].setText(Leaderboard.theLeaderboard[c].getName());
+      table[(c*4)+4+2].setText(difficulty[5-Leaderboard.theLeaderboard[c].getInvertedDifficulty()]);
+      table[(c*4)+4+3].setText(formatTime(Leaderboard.theLeaderboard[c].getTime()));
+    }
     frame1.setLocation(((width-810)/2), ((height-650)/2));
     frame2.setLocation(((width-810)/2) + 610, ((height-650)/2) + 100);
     time.setVisible(false);
@@ -515,12 +518,9 @@ public class MethodsGUI {
     gameOver = true;
     currentMode.setText("Difficulty: " + difficulty[actualDifficulty]);
     String name = JOptionPane.showInputDialog("Congrats on solving a"+(actualDifficulty==1?" ":"n ")+difficulty[actualDifficulty]+" Sudoku! Please enter your name");
-    //String diff = difficulty[actualDifficulty];
-    int internalDiff=5-actualDifficulty;
-    //String timeTaken = formatTime(timeKeeper);
-    long internalTime=timeKeeper;
     if(name!=null){
-      //code for adding values to the leaderboard
+      Leaderboard.addEntry(name,timeKeeper,5-actualDifficulty);
+      //Leaderboard.updateSQLData();
     }//end of if
     mainScreen();
   }//end of game over method
