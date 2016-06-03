@@ -7,9 +7,9 @@ import java.util.Arrays;
 /**A utility class that stores and manages upload of the leaderboard.*/
 public class Leaderboard implements Comparable<Leaderboard>{
   
-  public static String url = "jdbc:mysql://sql5.freesqldatabase.com:3306/sql5121998";
-  public static String user = "sql5121998";
-  public static String password = "mbePPU6Mig";
+  public static String url = "jdbc:mysql://sql5.freesqldatabase.com:3306/sql5122097";
+  public static String user = "sql5122097";
+  public static String password = "9B7vypsJbv";
   public static String sql;
   public static int length = 0;
   public static Leaderboard[] theLeaderboard=new Leaderboard[0];
@@ -52,16 +52,15 @@ public class Leaderboard implements Comparable<Leaderboard>{
       /**Copy current leaderboard*/
       ResultSet myRs = myStmt.executeQuery("select * from Leaderboard");
       myRs.last();
-      length = myRs.getRow() + 1;
+      length = myRs.getRow();
       theLeaderboard = new Leaderboard[Math.min(length,4096)];
       myRs.first();
-      int counter=0;
-      do{
-        theLeaderboard[myRs.getRow()] = new Leaderboard(myRs.getString("Name"), myRs.getLong("Score"), myRs.getInt("Difficulty")); 
-        counter++;
-      }while(myRs.next()&&counter>4096);
+      for(int c=0;c<length;c++){
+        theLeaderboard[c] = new Leaderboard(myRs.getString("Name"),myRs.getLong("Score"),myRs.getInt("Difficulty")); 
+        myRs.next();
+      }
       myConn.close();
-    }catch (Exception e){}
+    }catch (Exception e){e.printStackTrace();}
     Arrays.sort(theLeaderboard);
   }
   
@@ -89,7 +88,6 @@ public class Leaderboard implements Comparable<Leaderboard>{
       sql = "delete from Leaderboard";
       
       myStmt.executeUpdate(sql);
-      System.out.println("Delete complete.");
       
       for(int i = 0; i < length; i++){
       /**Execute SQL query*/
@@ -97,12 +95,9 @@ public class Leaderboard implements Comparable<Leaderboard>{
           + " (Name, Score, Difficulty)"
           + " values ('"+ theLeaderboard[i].name + "', '" + theLeaderboard[i].time + "', '" + theLeaderboard[i].invertedDifficulty + "')";
       myStmt.executeUpdate(sql);
-      System.out.println("Entry " + i + " set.");
       }
       myConn.close();
-      }catch (Exception e){
-      e.printStackTrace();
-    }
+      }catch (Exception e){e.printStackTrace();}
   }
   
 }
